@@ -468,9 +468,9 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
 }
 
 export interface ApiAboutPageAboutPage extends Struct.SingleTypeSchema {
-  collectionName: 'about_pages';
+  collectionName: 'about_pages_v5';
   info: {
-    description: 'Hakk\u0131m\u0131zda sayfas\u0131 i\u00E7eri\u011Fi';
+    description: 'Hakk\u0131m\u0131zda sayfas\u0131 i\u00E7eri\u011Fi ve ayarlar\u0131';
     displayName: 'Hakk\u0131m\u0131zda Sayfas\u0131';
     pluralName: 'about-pages';
     singularName: 'about-page';
@@ -479,6 +479,8 @@ export interface ApiAboutPageAboutPage extends Struct.SingleTypeSchema {
     draftAndPublish: false;
   };
   attributes: {
+    about_description: Schema.Attribute.Text;
+    about_image: Schema.Attribute.Media<'images'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -502,8 +504,38 @@ export interface ApiAboutPageAboutPage extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiBlogCategoryBlogCategory
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'blog_categories_v5';
+  info: {
+    displayName: 'Blog Kategorisi';
+    pluralName: 'blog-categories';
+    singularName: 'blog-category';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::blog-category.blog-category'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiBlogPostBlogPost extends Struct.CollectionTypeSchema {
-  collectionName: 'blog_posts';
+  collectionName: 'blog_posts_v5';
   info: {
     description: 'Blog makaleleri';
     displayName: 'Blog Yaz\u0131s\u0131';
@@ -515,10 +547,10 @@ export interface ApiBlogPostBlogPost extends Struct.CollectionTypeSchema {
   };
   attributes: {
     author: Schema.Attribute.String;
-    category: Schema.Attribute.Enumeration<
-      ['teknoloji', 'tasarim', 'yazilim', 'pazarlama']
-    > &
-      Schema.Attribute.Required;
+    blog_category: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::blog-category.blog-category'
+    >;
     content: Schema.Attribute.Blocks;
     cover_image: Schema.Attribute.Media<'images'>;
     createdAt: Schema.Attribute.DateTime;
@@ -536,6 +568,7 @@ export interface ApiBlogPostBlogPost extends Struct.CollectionTypeSchema {
     seo: Schema.Attribute.Component<'shared.seo', false>;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
     summary: Schema.Attribute.Text;
+    tags: Schema.Attribute.Relation<'manyToMany', 'api::tag.tag'>;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -544,7 +577,7 @@ export interface ApiBlogPostBlogPost extends Struct.CollectionTypeSchema {
 }
 
 export interface ApiContactPageContactPage extends Struct.SingleTypeSchema {
-  collectionName: 'contact_pages';
+  collectionName: 'contact_pages_v5';
   info: {
     description: '\u0130leti\u015Fim sayfas\u0131 i\u00E7eri\u011Fi ve form ayarlar\u0131';
     displayName: '\u0130leti\u015Fim Sayfas\u0131';
@@ -604,7 +637,7 @@ export interface ApiContactPageContactPage extends Struct.SingleTypeSchema {
 }
 
 export interface ApiGlobalSettingGlobalSetting extends Struct.SingleTypeSchema {
-  collectionName: 'global_settings';
+  collectionName: 'global_settings_v5';
   info: {
     description: 'Site geneli ayarlar, logo, footer, sosyal medya';
     displayName: 'Global Ayarlar';
@@ -615,6 +648,10 @@ export interface ApiGlobalSettingGlobalSetting extends Struct.SingleTypeSchema {
     draftAndPublish: false;
   };
   attributes: {
+    blog_page_desc: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'Teknoloji, tasar\u0131m ve dijital pazarlama \u00FCzerine g\u00FCncel makaleler.'>;
+    blog_page_title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Makalelerimiz'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -629,6 +666,10 @@ export interface ApiGlobalSettingGlobalSetting extends Struct.SingleTypeSchema {
     > &
       Schema.Attribute.Private;
     logo: Schema.Attribute.Media<'images'>;
+    projects_page_desc: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'Dijitalde iz b\u0131rakan, problem \u00E7\u00F6zen ve binlerce kullan\u0131c\u0131ya ula\u015Fan projelerimizden baz\u0131lar\u0131.'>;
+    projects_page_title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Neler Yapt\u0131k?'>;
     publishedAt: Schema.Attribute.DateTime;
     seo_default_description: Schema.Attribute.Text;
     seo_default_title: Schema.Attribute.String;
@@ -638,6 +679,10 @@ export interface ApiGlobalSettingGlobalSetting extends Struct.SingleTypeSchema {
     social_linkedin: Schema.Attribute.String;
     social_twitter: Schema.Attribute.String;
     social_youtube: Schema.Attribute.String;
+    templates_page_desc: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'Projeniz i\u00E7in kullanabilece\u011Finiz premium web ve uygulama \u015Fablonlar\u0131.'>;
+    templates_page_title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'\u015Eablonlar & Temalar'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -645,39 +690,29 @@ export interface ApiGlobalSettingGlobalSetting extends Struct.SingleTypeSchema {
 }
 
 export interface ApiHomePageHomePage extends Struct.SingleTypeSchema {
-  collectionName: 'home_pages';
+  collectionName: 'home_pages_v5';
   info: {
-    description: 'Ana sayfa i\u00E7erik y\u00F6netimi';
+    description: 'Ana sayfa i\u00E7erikleri ve yap\u0131land\u0131rmas\u0131';
     displayName: 'Ana Sayfa';
     pluralName: 'home-pages';
     singularName: 'home-page';
   };
   options: {
-    draftAndPublish: false;
+    draftAndPublish: true;
   };
   attributes: {
-    blog_section_heading: Schema.Attribute.String &
-      Schema.Attribute.DefaultTo<'Blog'>;
-    contact_section_heading: Schema.Attribute.String &
-      Schema.Attribute.DefaultTo<'\u0130leti\u015Fime Ge\u00E7'>;
-    contact_section_subheading: Schema.Attribute.Text;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     featured_projects: Schema.Attribute.Relation<
-      'oneToMany',
+      'manyToMany',
       'api::project.project'
     >;
-    hero_badge: Schema.Attribute.String &
-      Schema.Attribute.DefaultTo<'Yarat\u0131c\u0131 Teknoloji St\u00FCdyosu'>;
-    hero_cta_primary_label: Schema.Attribute.String &
-      Schema.Attribute.DefaultTo<'\u00C7\u00F6z\u00FCmleri \u0130ncele'>;
-    hero_cta_primary_url: Schema.Attribute.String &
-      Schema.Attribute.DefaultTo<'/#cozumler'>;
-    hero_cta_secondary_label: Schema.Attribute.String &
-      Schema.Attribute.DefaultTo<'\u00DCr\u00FCnlere G\u00F6z At'>;
-    hero_cta_secondary_url: Schema.Attribute.String &
-      Schema.Attribute.DefaultTo<'/#urunler'>;
+    hero_badge: Schema.Attribute.String;
+    hero_cta_primary_label: Schema.Attribute.String;
+    hero_cta_primary_url: Schema.Attribute.String;
+    hero_cta_secondary_label: Schema.Attribute.String;
+    hero_cta_secondary_url: Schema.Attribute.String;
     hero_heading: Schema.Attribute.String;
     hero_subheading: Schema.Attribute.Text;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -686,31 +721,19 @@ export interface ApiHomePageHomePage extends Struct.SingleTypeSchema {
       'api::home-page.home-page'
     > &
       Schema.Attribute.Private;
-    process_section_heading: Schema.Attribute.String &
-      Schema.Attribute.DefaultTo<'Nas\u0131l \u00C7al\u0131\u015F\u0131r\u0131z?'>;
-    process_steps: Schema.Attribute.Component<'shared.process-step', true>;
-    products_section_heading: Schema.Attribute.String &
-      Schema.Attribute.DefaultTo<'Kendi \u00DCr\u00FCnlerimiz'>;
+    products_section_heading: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     seo: Schema.Attribute.Component<'shared.seo', false>;
-    solutions_section_heading: Schema.Attribute.String &
-      Schema.Attribute.DefaultTo<'\u00C7\u00F6z\u00FCmlerimiz'>;
-    trusted_brands_logos: Schema.Attribute.Media<'images', true>;
+    solutions_section_heading: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    why_macework_description: Schema.Attribute.Text;
-    why_macework_features: Schema.Attribute.Component<'shared.feature', true>;
-    why_macework_heading: Schema.Attribute.String &
-      Schema.Attribute.DefaultTo<'Neden Macework?'>;
-    why_macework_image: Schema.Attribute.Media<'images'>;
-    work_section_heading: Schema.Attribute.String &
-      Schema.Attribute.DefaultTo<'\u00D6ne \u00C7\u0131kan Projeler'>;
+    work_section_heading: Schema.Attribute.String;
   };
 }
 
 export interface ApiLeadLead extends Struct.CollectionTypeSchema {
-  collectionName: 'leads';
+  collectionName: 'leads_v5';
   info: {
     description: 'Web sitesinden gelen teklif formlar\u0131';
     displayName: 'Form Talepleri (Leads)';
@@ -740,7 +763,7 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
 }
 
 export interface ApiProductProduct extends Struct.CollectionTypeSchema {
-  collectionName: 'products';
+  collectionName: 'products_saas_v5';
   info: {
     description: 'Ajans\u0131n kendi SaaS \u00FCr\u00FCnleri (Qrgetir, Carigetir vb.)';
     displayName: '\u00DCr\u00FCn';
@@ -774,8 +797,38 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiProjectCategoryProjectCategory
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'project_categories_v5';
+  info: {
+    displayName: 'Proje Kategorisi';
+    pluralName: 'project-categories';
+    singularName: 'project-category';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::project-category.project-category'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiProjectProject extends Struct.CollectionTypeSchema {
-  collectionName: 'projects';
+  collectionName: 'projects_v5';
   info: {
     description: '\u0130\u015Flerimiz / Portf\u00F6y projeleri';
     displayName: 'Proje';
@@ -786,10 +839,6 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    category: Schema.Attribute.Enumeration<
-      ['branding', 'tasarim', 'yazilim', 'pazarlama']
-    > &
-      Schema.Attribute.Required;
     client: Schema.Attribute.String;
     cover_image: Schema.Attribute.Media<'images'>;
     createdAt: Schema.Attribute.DateTime;
@@ -805,6 +854,10 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
       'api::project.project'
     > &
       Schema.Attribute.Private;
+    project_category: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::project-category.project-category'
+    >;
     publishedAt: Schema.Attribute.DateTime;
     seo: Schema.Attribute.Component<'shared.seo', false>;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
@@ -818,7 +871,7 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
 }
 
 export interface ApiSolutionSolution extends Struct.CollectionTypeSchema {
-  collectionName: 'solutions';
+  collectionName: 'solutions_v5';
   info: {
     description: 'Hizmet / \u00C7\u00F6z\u00FCm sayfalar\u0131';
     displayName: '\u00C7\u00F6z\u00FCm';
@@ -831,8 +884,6 @@ export interface ApiSolutionSolution extends Struct.CollectionTypeSchema {
   attributes: {
     badge_text: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'\u00C7\u00D6Z\u00DCMLER\u0130M\u0130Z'>;
-    category: Schema.Attribute.Enumeration<['dijital', 'teknoloji', 'urun']> &
-      Schema.Attribute.DefaultTo<'dijital'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -853,6 +904,10 @@ export interface ApiSolutionSolution extends Struct.CollectionTypeSchema {
     seo: Schema.Attribute.Component<'shared.seo', false>;
     short_description: Schema.Attribute.Text;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
+    solution_category: Schema.Attribute.Enumeration<
+      ['dijital', 'teknoloji', 'urun']
+    > &
+      Schema.Attribute.DefaultTo<'dijital'>;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -860,8 +915,37 @@ export interface ApiSolutionSolution extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiTagTag extends Struct.CollectionTypeSchema {
+  collectionName: 'tags';
+  info: {
+    description: 'Blog yaz\u0131lar\u0131 ve projeler i\u00E7in etiketler';
+    displayName: 'Etiket';
+    pluralName: 'tags';
+    singularName: 'tag';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::tag.tag'> &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiTeamMemberTeamMember extends Struct.CollectionTypeSchema {
-  collectionName: 'team_members';
+  collectionName: 'team_members_v5';
   info: {
     description: 'Ajans ekip \u00FCyeleri';
     displayName: 'Ekip \u00DCyesi';
@@ -894,8 +978,38 @@ export interface ApiTeamMemberTeamMember extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiTemplateCategoryTemplateCategory
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'template_categories_v5';
+  info: {
+    displayName: '\u015Eablon Kategorisi';
+    pluralName: 'template-categories';
+    singularName: 'template-category';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::template-category.template-category'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiTemplateTemplate extends Struct.CollectionTypeSchema {
-  collectionName: 'templates';
+  collectionName: 'templates_v5';
   info: {
     description: 'Haz\u0131r web site \u015Fablonlar\u0131';
     displayName: '\u015Eablon';
@@ -906,9 +1020,6 @@ export interface ApiTemplateTemplate extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    category: Schema.Attribute.Enumeration<
-      ['e-ticaret', 'kurumsal', 'saas', 'portfolyo', 'restoran']
-    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -925,6 +1036,10 @@ export interface ApiTemplateTemplate extends Struct.CollectionTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
     tags: Schema.Attribute.JSON;
+    template_category: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::template-category.template-category'
+    >;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -1445,15 +1560,19 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::about-page.about-page': ApiAboutPageAboutPage;
+      'api::blog-category.blog-category': ApiBlogCategoryBlogCategory;
       'api::blog-post.blog-post': ApiBlogPostBlogPost;
       'api::contact-page.contact-page': ApiContactPageContactPage;
       'api::global-setting.global-setting': ApiGlobalSettingGlobalSetting;
       'api::home-page.home-page': ApiHomePageHomePage;
       'api::lead.lead': ApiLeadLead;
       'api::product.product': ApiProductProduct;
+      'api::project-category.project-category': ApiProjectCategoryProjectCategory;
       'api::project.project': ApiProjectProject;
       'api::solution.solution': ApiSolutionSolution;
+      'api::tag.tag': ApiTagTag;
       'api::team-member.team-member': ApiTeamMemberTeamMember;
+      'api::template-category.template-category': ApiTemplateCategoryTemplateCategory;
       'api::template.template': ApiTemplateTemplate;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
