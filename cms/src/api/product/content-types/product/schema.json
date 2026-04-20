@@ -1,0 +1,43 @@
+{
+  "kind": "collectionType",
+  "collectionName": "products_saas_v5",
+  "info": {
+    "singularName": "product",
+    "pluralName": "products",
+    "displayName": "Ürün",
+    "description": "Ajansın kendi SaaS ürünleri (Qrgetir, Carigetir vb.)"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "tag": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "platform_url": {
+      "type": "string"
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}

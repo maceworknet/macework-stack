@@ -1,0 +1,48 @@
+{
+  "kind": "collectionType",
+  "collectionName": "templates_v5",
+  "info": {
+    "singularName": "template",
+    "pluralName": "templates",
+    "displayName": "Şablon",
+    "description": "Hazır web site şablonları"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "template_category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::template-category.template-category"
+    },
+    "preview_image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "demo_url": {
+      "type": "string"
+    },
+    "price": {
+      "type": "decimal"
+    },
+    "is_free": {
+      "type": "boolean",
+      "default": false
+    },
+    "tags": {
+      "type": "json"
+    }
+  }
+}

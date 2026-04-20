@@ -1,0 +1,65 @@
+{
+  "kind": "collectionType",
+  "collectionName": "solutions_v5",
+  "info": {
+    "singularName": "solution",
+    "pluralName": "solutions",
+    "displayName": "Çözüm",
+    "description": "Hizmet / Çözüm sayfaları"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "badge_text": {
+      "type": "string",
+      "default": "ÇÖZÜMLERİMİZ"
+    },
+    "short_description": {
+      "type": "text"
+    },
+    "icon": {
+      "type": "string"
+    },
+    "solution_category": {
+      "type": "enumeration",
+      "enum": ["dijital", "teknoloji", "urun"],
+      "default": "dijital"
+    },
+    "features": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.feature"
+    },
+    "process_steps": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.process-step"
+    },
+    "cta_label": {
+      "type": "string",
+      "default": "Hizmet Hakkında Bilgi Al"
+    },
+    "cta_url": {
+      "type": "string"
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    },
+    "seo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo"
+    }
+  }
+}

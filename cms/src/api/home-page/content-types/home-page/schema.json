@@ -1,0 +1,55 @@
+{
+  "kind": "singleType",
+  "collectionName": "home_pages_v5",
+  "info": {
+    "singularName": "home-page",
+    "pluralName": "home-pages",
+    "displayName": "Ana Sayfa",
+    "description": "Ana sayfa içerikleri ve yapılandırması"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "hero_badge": {
+      "type": "string"
+    },
+    "hero_heading": {
+      "type": "string"
+    },
+    "hero_subheading": {
+      "type": "text"
+    },
+    "hero_cta_primary_label": {
+      "type": "string"
+    },
+    "hero_cta_primary_url": {
+      "type": "string"
+    },
+    "hero_cta_secondary_label": {
+      "type": "string"
+    },
+    "hero_cta_secondary_url": {
+      "type": "string"
+    },
+    "solutions_section_heading": {
+      "type": "string"
+    },
+    "products_section_heading": {
+      "type": "string"
+    },
+    "work_section_heading": {
+      "type": "string"
+    },
+    "featured_projects": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::project.project"
+    },
+    "seo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo"
+    }
+  }
+}

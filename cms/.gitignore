@@ -1,0 +1,44 @@
+############################
+# OS X
+############################
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+.Spotlight-V100
+.Trashes
+._*
+
+############################
+# Linux
+############################
+*~
+
+############################
+# Windows
+############################
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+############################
+# Packages
+############################
+node_modules/
+
+############################
+# Strapi
+############################
+.env
+.tmp/
+.strapi/
+build/
+dist/
+license.txt
+exports/
+*.cache
+*.log
+check_users.js
+ts-error.log
+strapi-boot.log

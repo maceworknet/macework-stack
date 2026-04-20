@@ -1,0 +1,82 @@
+{
+  "kind": "singleType",
+  "collectionName": "global_settings_v5",
+  "info": {
+    "singularName": "global-setting",
+    "pluralName": "global-settings",
+    "displayName": "Global Ayarlar",
+    "description": "Site geneli ayarlar, logo, footer, sosyal medya"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "site_name": {
+      "type": "string",
+      "default": "Macework Creative"
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "favicon": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "footer_description": {
+      "type": "text"
+    },
+    "footer_email": {
+      "type": "string"
+    },
+    "footer_phone": {
+      "type": "string"
+    },
+    "social_instagram": {
+      "type": "string"
+    },
+    "social_twitter": {
+      "type": "string"
+    },
+    "social_linkedin": {
+      "type": "string"
+    },
+    "social_youtube": {
+      "type": "string"
+    },
+    "seo_default_title": {
+      "type": "string"
+    },
+    "seo_default_description": {
+      "type": "text"
+    },
+    "projects_page_title": {
+      "type": "string",
+      "default": "Neler Yaptık?"
+    },
+    "projects_page_desc": {
+      "type": "text",
+      "default": "Dijitalde iz bırakan, problem çözen ve binlerce kullanıcıya ulaşan projelerimizden bazıları."
+    },
+    "blog_page_title": {
+      "type": "string",
+      "default": "Makalelerimiz"
+    },
+    "blog_page_desc": {
+      "type": "text",
+      "default": "Teknoloji, tasarım ve dijital pazarlama üzerine güncel makaleler."
+    },
+    "templates_page_title": {
+      "type": "string",
+      "default": "Şablonlar & Temalar"
+    },
+    "templates_page_desc": {
+      "type": "text",
+      "default": "Projeniz için kullanabileceğiniz premium web ve uygulama şablonları."
+    }
+  }
+}

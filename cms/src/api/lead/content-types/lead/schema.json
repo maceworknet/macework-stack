@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "leads_v5",
+  "info": {
+    "singularName": "lead",
+    "pluralName": "leads",
+    "displayName": "Form Talepleri (Leads)",
+    "description": "Web sitesinden gelen teklif formları"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "company": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "interest": {
+      "type": "string"
+    },
+    "message": {
+      "type": "text"
+    }
+  }
+}

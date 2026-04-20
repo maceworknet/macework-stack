@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "template_categories_v5",
+  "info": {
+    "singularName": "template-category",
+    "pluralName": "template-categories",
+    "displayName": "Şablon Kategorisi"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
+    }
+  }
+}

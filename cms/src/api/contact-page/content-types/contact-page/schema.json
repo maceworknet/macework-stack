@@ -1,0 +1,85 @@
+{
+  "kind": "singleType",
+  "collectionName": "contact_pages_v5",
+  "info": {
+    "singularName": "contact-page",
+    "pluralName": "contact-pages",
+    "displayName": "İletişim Sayfası",
+    "description": "İletişim sayfası içeriği ve form ayarları"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "default": "İletişime Geçin"
+    },
+    "subheading": {
+      "type": "text"
+    },
+    "address": {
+      "type": "text",
+      "default": "Maslak, İstanbul"
+    },
+    "email": {
+      "type": "string",
+      "default": "iletisim@macework.com"
+    },
+    "phone": {
+      "type": "string",
+      "default": "+90 212 000 0000"
+    },
+    "contact_info_description": {
+      "type": "text",
+      "default": "Markanızı dijitalde parlatmak ve yenilikçi teknoloji çözümlerimizle tanışmak için ekibimizle doğrudan iletişime geçin."
+    },
+    "whatsapp_number": {
+      "type": "string",
+      "default": "+905000000000"
+    },
+    "whatsapp_text": {
+      "type": "string",
+      "default": "Hızlı cevap için WhatsApp'tan ulaşın."
+    },
+    "form_heading": {
+      "type": "string",
+      "default": "Yeni Bir Projeye Başlayalım"
+    },
+    "form_subheading": {
+      "type": "text",
+      "default": "Fikrinizi ürüne dönüştürmek veya markanızı dijitalde büyütmek için ilk adımı atın."
+    },
+    "form_placeholder_name": {
+      "type": "string",
+      "default": "Yaser Köse"
+    },
+    "form_placeholder_company": {
+      "type": "string",
+      "default": "Macework"
+    },
+    "form_placeholder_email": {
+      "type": "string",
+      "default": "iletisim@macework.com"
+    },
+    "form_placeholder_message": {
+      "type": "string",
+      "default": "Projenizden veya talebinizden bahsedin..."
+    },
+    "form_button_text": {
+      "type": "string",
+      "default": "Teklif Al"
+    },
+    "form_interest_options": {
+      "type": "json"
+    },
+    "map_embed_url": {
+      "type": "text"
+    },
+    "seo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo"
+    }
+  }
+}
