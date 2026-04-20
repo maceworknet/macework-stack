@@ -1,0 +1,68 @@
+{
+  "data": {
+    "id": 1,
+    "documentId": "vpa9jzabssgycavn65fgmt7e",
+    "site_name": "Macework Creative",
+    "footer_description": "Ölçeklenebilir dijital altyapılar ve inovatif SaaS ürünleri geliştiren 360 derece teknoloji ajansı.",
+    "footer_email": "bilgi@macework.com",
+    "footer_phone": "+90 535 677 28 95",
+    "social_instagram": "https://www.instagram.com/maceworknet",
+    "social_twitter": null,
+    "social_linkedin": null,
+    "social_youtube": null,
+    "seo_default_title": "Macework Creative — Yaratıcı Teknoloji Stüdyosu",
+    "seo_default_description": "Web tasarım, yazılım geliştirme, SEO ve dijital pazarlama alanlarında öne çıkan Diyarbakır'ın inovatif teknoloji ajansı.",
+    "createdAt": "2026-04-07T23:22:00.322Z",
+    "updatedAt": "2026-04-08T21:53:38.738Z",
+    "publishedAt": "2026-04-08T21:53:38.726Z",
+    "logo": null,
+    "favicon": {
+      "id": 1,
+      "documentId": "ayd9g2nkm4ll2fhi1ca8lckq",
+      "name": "record-button.png",
+      "alternativeText": null,
+      "caption": null,
+      "focalPoint": null,
+      "width": 512,
+      "height": 512,
+      "formats": {
+        "thumbnail": {
+          "name": "thumbnail_record-button.png",
+          "hash": "thumbnail_record_button_4dec801003",
+          "ext": ".png",
+          "mime": "image/png",
+          "path": null,
+          "width": 156,
+          "height": 156,
+          "size": 3.39,
+          "sizeInBytes": 3385,
+          "url": "/uploads/thumbnail_record_button_4dec801003.png"
+        },
+        "small": {
+          "name": "small_record-button.png",
+          "hash": "small_record_button_4dec801003",
+          "ext": ".png",
+          "mime": "image/png",
+          "path": null,
+          "width": 500,
+          "height": 500,
+          "size": 12.83,
+          "sizeInBytes": 12827,
+          "url": "/uploads/small_record_button_4dec801003.png"
+        }
+      },
+      "hash": "record_button_4dec801003",
+      "ext": ".png",
+      "mime": "image/png",
+      "size": 2.18,
+      "url": "/uploads/record_button_4dec801003.png",
+      "previewUrl": null,
+      "provider": "local",
+      "provider_metadata": null,
+      "createdAt": "2026-04-08T21:52:11.910Z",
+      "updatedAt": "2026-04-08T21:52:11.910Z",
+      "publishedAt": "2026-04-08T21:52:11.911Z"
+    }
+  },
+  "meta": {}
+}
