@@ -1,5 +1,7 @@
-import { fetchStrapi } from '@/lib/strapi';
+import { getAboutPage, getTeamMembers } from '@/lib/cms';
 import AboutClient from './about-client';
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: 'Hakkımızda | Macework',
@@ -7,15 +9,10 @@ export const metadata = {
 };
 
 export default async function AboutPage() {
-  const data = await fetchStrapi<any>('about-page', { 
-    populate: {
-      stats: '*',
-      about_image: '*',
-      story: '*',
-      seo: '*'
-    }
-  }).catch(() => null);
-  const team = await fetchStrapi<any[]>('team-members', { populate: '*' }).catch(() => []);
+  const [data, team] = await Promise.all([
+    getAboutPage(),
+    getTeamMembers()
+  ]);
   
-  return <AboutClient strapiData={data} strapiTeam={team} />;
+  return <AboutClient data={data} team={team} />;
 }

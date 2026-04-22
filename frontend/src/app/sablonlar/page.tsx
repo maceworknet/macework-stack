@@ -1,5 +1,7 @@
-import { fetchStrapi, getStrapiMedia } from '@/lib/strapi';
+import { getTemplateCategories, getTemplates, getTemplatesPageSettings } from '@/lib/cms';
 import TemplatesClient from './templates-client';
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: 'Şablon Kütüphanesi | Macework',
@@ -7,11 +9,11 @@ export const metadata = {
 };
 
 export default async function TemplatesPage() {
-  const [templates, categories, globalSettings] = await Promise.all([
-    fetchStrapi<any[]>("templates", { populate: '*' }).catch(() => []),
-    fetchStrapi<any[]>("template-categories", { populate: '*' }).catch(() => []),
-    fetchStrapi<any>("global-setting", { populate: '*' }).catch(() => null)
+  const [templates, categories, pageSettings] = await Promise.all([
+    getTemplates(),
+    getTemplateCategories(),
+    getTemplatesPageSettings()
   ]);
   
-  return <TemplatesClient strapiTemplates={templates} categories={categories} globalSettings={globalSettings} />;
+  return <TemplatesClient templates={templates} categories={categories} globalSettings={pageSettings} />;
 }

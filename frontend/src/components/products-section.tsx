@@ -2,19 +2,20 @@
 
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "./ui/card";
 import { Badge } from "./ui/badge";
+import { richTextToPlainText } from "@/lib/rich-text";
 interface ProductCardProps {
   title: string;
   description: string;
   badge: string;
-  href: string;
   category: string;
   slug: string;
 }
 
-export function ProductCard({ title, description, badge, href, category, slug }: ProductCardProps) {
+export function ProductCard({ title, description, badge, category, slug }: ProductCardProps) {
+  const summary = richTextToPlainText(description) || description;
+
   return (
     <Link 
       href={`/urunler/${slug}`} 
@@ -41,7 +42,7 @@ export function ProductCard({ title, description, badge, href, category, slug }:
         
         <CardContent className="flex-1">
           <p className="text-muted-foreground text-sm leading-relaxed">
-            {description}
+            {summary}
           </p>
         </CardContent>
 
@@ -56,7 +57,15 @@ export function ProductCard({ title, description, badge, href, category, slug }:
   );
 }
 
-export function ProductsSection({ products, heading }: { products: any[], heading?: string }) {
+export function ProductsSection({
+  products,
+  heading,
+  description,
+}: {
+  products: any[];
+  heading?: string;
+  description?: string;
+}) {
   return (
     <section id="urunler" className="py-24 bg-background">
       <div className="container">
@@ -65,7 +74,8 @@ export function ProductsSection({ products, heading }: { products: any[], headin
             {heading || "Kendi Ürünlerimiz"}
           </h2>
           <p className="text-lg text-muted-foreground font-normal leading-relaxed">
-            Macework imzasıyla geliştirdiğimiz ve aktif olarak büyüyen dijital ürün ekosistemimizi keşfedin.
+            {description ||
+              "Macework imzasıyla geliştirdiğimiz ve aktif olarak büyüyen dijital ürün ekosistemimizi keşfedin."}
           </p>
         </div>
 
@@ -76,7 +86,6 @@ export function ProductsSection({ products, heading }: { products: any[], headin
               title={product.title}
               description={product.description}
               badge="ÜRÜN"
-              href={product.platform_url || `#`}
               category={product.tag}
               slug={product.slug}
             />

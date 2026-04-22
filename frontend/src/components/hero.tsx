@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { ArrowRight, MoveRight, ChevronRight } from "lucide-react";
 import { InfiniteGrid } from "./ui/the-infinite-grid";
-import { getStrapiMedia } from "@/lib/strapi";
+import { resolveMediaUrl } from "@/lib/media";
 import { motion } from "framer-motion";
 import { Button } from "./ui/button";
 
@@ -88,21 +88,30 @@ export function Hero({ data }: { data: any }) {
              className="mt-12 w-full max-w-4xl mx-auto overflow-hidden pause-marquee"
           >
              <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground/50 mb-10 text-center">
-               REFERANSLARIMIZ & ÜRÜNLERİMİZ
+               {data.trusted_brands_heading || "REFERANSLARIMIZ & ÜRÜNLERİMİZ"}
              </p>
              <div className="relative group/slider [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]">
                 <div className="flex w-fit gap-16 items-center animate-marquee whitespace-nowrap">
                    {[...Array(4)].map((_, i) => (
                       <div key={i} className="flex gap-16 items-center">
                          {data.trusted_brands_logos?.length > 0 ? (
-                            data.trusted_brands_logos.map((logo: any, j: number) => (
-                               <img 
-                                 key={`${i}-${j}`}
-                                 src={getStrapiMedia(logo.url)} 
-                                 alt={logo.alternativeText || `Brand ${j}`} 
-                                 className="h-8 max-w-[140px] object-contain opacity-40 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
-                               />
-                            ))
+                            data.trusted_brands_logos.map((logo: any, j: number) => {
+                               const image = (
+                                 <img
+                                   src={resolveMediaUrl(logo.url)}
+                                   alt={logo.alternativeText || `Brand ${j}`}
+                                   className="h-8 max-w-[140px] object-contain opacity-40 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+                                 />
+                               );
+
+                               return logo.href ? (
+                                 <Link key={`${i}-${j}`} href={logo.href} target="_blank">
+                                   {image}
+                                 </Link>
+                               ) : (
+                                 <span key={`${i}-${j}`}>{image}</span>
+                               );
+                            })
                          ) : (
                             ["Qrgetir", "Carigetir", "SociaMind", "byoo.pro"].map((p, j) => (
                                 <span key={`${i}-${j}`} className="text-xl md:text-2xl font-bold tracking-tight text-foreground/40 hover:text-foreground transition-colors cursor-default select-none">
@@ -120,4 +129,3 @@ export function Hero({ data }: { data: any }) {
     </InfiniteGrid>
   );
 }
-

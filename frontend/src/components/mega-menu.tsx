@@ -21,8 +21,9 @@ const icons: Record<string, React.ElementType> = {
   "link": Network
 };
 
-export function MegaMenu({ label }: { label: string }) {
+export function MegaMenu({ label, columns }: { label: string; columns?: any[] }) {
   const [isOpen, setIsOpen] = useState(false);
+  const menuColumns = columns?.length ? columns : siteContent.solutionsMegaMenu.columns;
 
   return (
     <div 
@@ -43,12 +44,14 @@ export function MegaMenu({ label }: { label: string }) {
         )}
       >
         <div className="bg-background border border-border rounded-xl p-8 shadow-xl grid grid-cols-3 gap-8 relative overflow-hidden backdrop-blur-md">
-          {siteContent.solutionsMegaMenu.columns.map((col, idx) => (
+          {menuColumns.map((col, idx) => (
             <div key={idx} className="space-y-4">
               <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest px-2">{col.title}</h3>
               <ul className="space-y-1">
-                {col.items.map((item, itemIdx) => {
-                  const Icon = icons[item.iconName] || Code;
+                {(col.items ?? [])
+                  .filter((item: any) => item.published !== false)
+                  .map((item: any, itemIdx: number) => {
+                  const Icon = icons[item.icon || item.iconName] || Code;
                   return (
                     <li key={itemIdx}>
                       <Link href={item.href} className="group/item flex items-start gap-3 p-2 rounded-md hover:bg-muted transition-colors">
@@ -71,4 +74,3 @@ export function MegaMenu({ label }: { label: string }) {
     </div>
   );
 }
-

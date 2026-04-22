@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const inter = Inter({
@@ -13,18 +14,70 @@ const poppins = Poppins({
   weight: ["400", "500", "600", "700", "800", "900"],
 });
 
-import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
-import { ScrollToTop } from "@/components/scroll-to-top";
 import { ThemeProvider } from "@/components/theme-provider";
-import { fetchStrapi, getStrapiMedia } from "@/lib/strapi";
+import { LayoutChrome } from "@/components/layout-chrome";
+import {
+  getFooterSettings,
+  getGlobalSettings,
+  getHeaderSettings,
+  resolveMediaUrl,
+} from "@/lib/cms";
+
+const stripExtensionHydrationAttributes = `
+(function () {
+  var attributeName = "bis_skin_checked";
+
+  function strip(root) {
+    if (!root) return;
+
+    if (root.nodeType === 1 && root.hasAttribute && root.hasAttribute(attributeName)) {
+      root.removeAttribute(attributeName);
+    }
+
+    if (root.querySelectorAll) {
+      root.querySelectorAll("[" + attributeName + "]").forEach(function (node) {
+        node.removeAttribute(attributeName);
+      });
+    }
+  }
+
+  strip(document.documentElement);
+
+  var observer = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) {
+      if (mutation.type === "attributes" && mutation.attributeName === attributeName) {
+        mutation.target.removeAttribute(attributeName);
+      }
+
+      mutation.addedNodes.forEach(strip);
+    });
+  });
+
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: [attributeName],
+    childList: true,
+    subtree: true
+  });
+
+  window.addEventListener("load", function () {
+    strip(document.documentElement);
+    window.setTimeout(function () {
+      strip(document.documentElement);
+      observer.disconnect();
+    }, 1000);
+  }, { once: true });
+})();
+`;
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = await fetchStrapi('global-setting', { populate: '*' }).catch(() => null);
+  const settings = await getGlobalSettings();
   
   const title = settings?.seo_default_title || "Macework Creativ - Yaratıcı Teknoloji ve Ürün Stüdyosu";
   const desc = settings?.seo_default_description || "Macework Creativ, yenilikçi SaaS ürünleri, ölçeklenebilir dijital çözümler ve modern teknoloji altyapıları geliştiren kreatif stüdyodur.";
-  const icon = settings?.favicon?.url ? getStrapiMedia(settings.favicon.url) : "/favicon.ico";
+  const icon = settings?.favicon?.url ? resolveMediaUrl(settings.favicon.url) : "/favicon.ico";
 
   return {
     title: {
@@ -56,7 +109,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const settings = await fetchStrapi('global-setting', { populate: '*' }).catch(() => null);
+  const [settings, headerSettings, footerSettings] = await Promise.all([
+    getGlobalSettings(),
+    getHeaderSettings(),
+    getFooterSettings(),
+  ]);
 
   return (
     <html
@@ -65,18 +122,24 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        <Script
+          id="strip-extension-hydration-attributes"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: stripExtensionHydrationAttributes }}
+        />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <Header />
-          <main className="flex-1 flex flex-col">
+          <LayoutChrome
+            settings={settings}
+            headerSettings={headerSettings}
+            footerSettings={footerSettings}
+          >
             {children}
-          </main>
-          <Footer settings={settings} />
-          <ScrollToTop />
+          </LayoutChrome>
         </ThemeProvider>
       </body>
     </html>

@@ -4,16 +4,28 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { ArrowRight, ChevronRight, X } from "lucide-react";
 import { siteContent } from "../content/site-content";
-import { cn } from "../lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./ui/button";
 
 interface MobileNavProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
+  settings?: any;
+  footerSettings?: any;
 }
 
-export function MobileNav({ isOpen, onOpenChange }: MobileNavProps) {
+export function MobileNav({ isOpen, onOpenChange, settings, footerSettings }: MobileNavProps) {
+  const navigation = (settings?.navigation?.length
+    ? settings.navigation
+    : siteContent.header.navigation
+  ).filter((item: any) => item.published !== false);
+  const cta = {
+    label: settings?.cta_label || siteContent.header.cta.label,
+    href: settings?.cta_href || siteContent.header.cta.href,
+  };
+  const email = footerSettings?.email || siteContent.contact.email;
+  const phone = footerSettings?.phone || siteContent.contact.phone;
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -49,7 +61,7 @@ export function MobileNav({ isOpen, onOpenChange }: MobileNavProps) {
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-border/50">
               <span className="text-lg font-bold tracking-tighter">
-                Macework<span className="text-macework">.</span>
+                {settings?.logo_text || "Macework"}<span className="text-macework">.</span>
               </span>
               <Button 
                 variant="ghost"
@@ -66,7 +78,7 @@ export function MobileNav({ isOpen, onOpenChange }: MobileNavProps) {
               <div className="space-y-4">
                 <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground ml-2">Menü</p>
                 <nav className="space-y-1">
-                  {siteContent.header.navigation.map((item, idx) => (
+                  {navigation.map((item: any, idx: number) => (
                     <motion.div
                       key={item.label}
                       initial={{ opacity: 0, x: 10 }}
@@ -75,6 +87,7 @@ export function MobileNav({ isOpen, onOpenChange }: MobileNavProps) {
                     >
                       <Link
                         href={item.href}
+                        target={item.target === "_blank" ? "_blank" : undefined}
                         className="flex items-center justify-between p-3 rounded-lg hover:bg-muted transition-all group"
                         onClick={() => onOpenChange(false)}
                       >
@@ -90,14 +103,14 @@ export function MobileNav({ isOpen, onOpenChange }: MobileNavProps) {
                 <div className="space-y-4 ml-2">
                   <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">İletişim</p>
                   <div className="space-y-1">
-                    <p className="font-medium text-sm">{siteContent.contact.email}</p>
-                    <p className="text-sm text-muted-foreground">{siteContent.contact.phone}</p>
+                    <p className="font-medium text-sm">{email}</p>
+                    <p className="text-sm text-muted-foreground">{phone}</p>
                   </div>
                 </div>
 
                 <Button asChild className="w-full h-12 rounded-lg" onClick={() => onOpenChange(false)}>
-                  <Link href={siteContent.header.cta.href}>
-                    {siteContent.header.cta.label}
+                  <Link href={cta.href}>
+                    {cta.label}
                     <ArrowRight className="ml-2 w-4 h-4" />
                   </Link>
                 </Button>
@@ -106,7 +119,9 @@ export function MobileNav({ isOpen, onOpenChange }: MobileNavProps) {
 
             {/* Footer */}
             <div className="p-8 border-t border-border/50">
-               <p className="text-[10px] text-muted-foreground font-medium">{siteContent.footer.copyright}</p>
+               <p className="text-[10px] text-muted-foreground font-medium">
+                 {footerSettings?.copyright || siteContent.footer.copyright}
+               </p>
             </div>
           </motion.div>
         </div>
@@ -114,4 +129,3 @@ export function MobileNav({ isOpen, onOpenChange }: MobileNavProps) {
     </AnimatePresence>
   );
 }
-

@@ -4,8 +4,17 @@ import * as LucideIcons from "lucide-react";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
+import { richTextToPlainText } from "@/lib/rich-text";
 
-export function SolutionsSection({ solutions, heading }: { solutions: any[], heading?: string }) {
+export function SolutionsSection({
+  solutions,
+  heading,
+  description,
+}: {
+  solutions: any[];
+  heading?: string;
+  description?: string;
+}) {
 
   return (
     <section id="cozumler" className="py-24 bg-muted/30">
@@ -13,13 +22,18 @@ export function SolutionsSection({ solutions, heading }: { solutions: any[], hea
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{heading || "Kapsamlı Dijital Çözümler"}</h2>
           <p className="text-lg text-muted-foreground font-normal">
-            İşletmenizin dijital dönüşüm yolculuğunda her adımda yanınızdayız. Stratejiden tasarıma, yazımdan büyümeye kadar tam hizmet.
+            {description ||
+              "İşletmenizin dijital dönüşüm yolculuğunda her adımda yanınızdayız. Stratejiden tasarıma, yazımdan büyümeye kadar tam hizmet."}
           </p>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {solutions?.map((solution, idx) => {
             const Icon = (LucideIcons as any)[solution.icon] || LucideIcons.Code;
+            const summary =
+              richTextToPlainText(solution.short_description || solution.description) ||
+              solution.short_description ||
+              solution.description;
             return (
               <Link 
                 key={solution.documentId || idx} 
@@ -39,7 +53,7 @@ export function SolutionsSection({ solutions, heading }: { solutions: any[], hea
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                      {solution.short_description || solution.description}
+                      {summary}
                     </p>
                   </CardContent>
                 </Card>
@@ -51,4 +65,3 @@ export function SolutionsSection({ solutions, heading }: { solutions: any[], hea
     </section>
   );
 }
-

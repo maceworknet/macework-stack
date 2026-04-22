@@ -1,152 +1,169 @@
 "use client";
 
-﻿import { getStrapiMedia } from '@/lib/strapi';
-
 import { useState } from "react";
-import { siteContent } from "@/content/site-content";
-import { ArrowRight, MoveRight, Layers } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight, Layers, MoveRight } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 import { SubPageHeader } from "@/components/subpage-header";
 import { cn } from "@/lib/utils";
+import { resolveMediaUrl } from "@/lib/media";
 import Link from "next/link";
+import { richTextToPlainText } from "@/lib/rich-text";
 
-export default function TemplatesClient({ 
-  strapiTemplates = [], 
+export default function TemplatesClient({
+  templates = [],
   categories = [],
-  globalSettings = {}
-}: { 
-  strapiTemplates?: any[], 
-  categories?: any[],
-  globalSettings?: any
+  globalSettings = {},
+}: {
+  templates?: any[];
+  categories?: any[];
+  globalSettings?: any;
 }) {
   const [activeCategory, setActiveCategory] = useState("Hepsi");
+  const categoryNames = ["Hepsi", ...categories.map((category) => category.name)];
 
-  const categoryNames = ["Hepsi", ...categories.map(c => c.name)];
-
-  const filteredTemplates = strapiTemplates.filter(item => 
+  const filteredTemplates = templates.filter((item) =>
     activeCategory === "Hepsi" ? true : item.template_category?.name === activeCategory
   );
 
   return (
     <main className="min-h-screen">
-      <SubPageHeader 
-        badge="Şablon Kütüphanesi"
-        title={globalSettings?.templates_page_title || "Hazır Şablonlarımızı Keşfedin"}
-        description={globalSettings?.templates_page_desc || "İşletmeniz için özelleştirilebilir, modern ve yüksek performanslı hazır web altyapıları. Sektörünüze en uygun çözümü seçin ve dijital dönüşümünüzü hızlandırın."}
+      <SubPageHeader
+        badge={globalSettings?.eyebrow || "Sablon Kutuphanesi"}
+        title={globalSettings?.heading || "Hazir Sablonlarimizi Kesfedin"}
+        description={
+          globalSettings?.description ||
+          "Isletmeniz icin ozellestirilebilir, modern ve yuksek performansli hazir web altyapilari."
+        }
       />
 
-      <section className="py-20 bg-background">
+      <section className="bg-background py-20">
         <div className="container">
-          {/* Filter Bar */}
-          <div className="flex justify-center mb-16 px-4">
-            <div className="inline-flex items-center p-1.5 bg-muted/50 backdrop-blur-sm rounded-2xl border border-border/50 max-w-full overflow-x-auto scrollbar-none">
-              <div className="flex items-center min-w-max">
+          <div className="mb-16 flex justify-center px-4">
+            <div className="scrollbar-none inline-flex max-w-full items-center overflow-x-auto rounded-2xl border border-border/50 bg-muted/50 p-1.5 backdrop-blur-sm">
+              <div className="flex min-w-max items-center">
                 {categoryNames.map((category) => (
                   <button
                     key={category}
                     onClick={() => setActiveCategory(category)}
                     className={cn(
-                      "relative px-6 py-2.5 text-xs font-bold transition-all duration-300 rounded-xl shrink-0 whitespace-nowrap",
-                      activeCategory === category 
-                        ? "text-foreground" 
+                      "relative shrink-0 whitespace-nowrap rounded-xl px-6 py-2.5 text-xs font-bold transition-all duration-300",
+                      activeCategory === category
+                        ? "text-foreground"
                         : "text-muted-foreground hover:text-foreground"
                     )}
                   >
                     {activeCategory === category && (
                       <motion.div
                         layoutId="active-pill-templates"
-                        className="absolute inset-0 bg-background border border-border/50 rounded-xl shadow-sm"
+                        className="absolute inset-0 rounded-xl border border-border/50 bg-background shadow-sm"
                         transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                       />
                     )}
-                    <span className="relative z-10">{category === "Hepsi" ? "Tüm Şablonlar" : category}</span>
+                    <span className="relative z-10">
+                      {category === "Hepsi" ? "Tum Sablonlar" : category}
+                    </span>
                   </button>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Templates Grid */}
-          <motion.div 
-            layout
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
+          <motion.div layout className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             <AnimatePresence mode="popLayout">
-              {filteredTemplates.map((template) => (
-                <motion.div
-                  key={template.id}
-                  layout
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Link
-                    href={`/sablonlar/${template.slug}`}
-                    className="group flex flex-col h-full bg-card border border-border rounded-3xl hover:border-macework/50 transition-all duration-500 overflow-hidden shadow-none hover:shadow-xl hover:shadow-macework/5"
-                  >
-                    <div className="relative aspect-[16/10] overflow-hidden">
-                       <img 
-                        src={template.preview_image?.url ? getStrapiMedia(template.preview_image.url) : (template.cover_image?.url ? getStrapiMedia(template.cover_image.url) : template.image)} 
-                        alt={template.title} 
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-                       />
-                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
-                          <span className="text-macework font-bold text-[10px] uppercase tracking-[0.2em]">{template.template_category?.name || "Şablon"}</span>
-                          <h4 className="text-white font-bold text-xl tracking-tight mt-1">{template.title}</h4>
-                       </div>
-                    </div>
+              {filteredTemplates.map((template) => {
+                const summary =
+                  richTextToPlainText(template.description) ||
+                  `Modern tasarimi ve guclu altyapisiyla markanizi bir adim one cikaracak profesyonel ${
+                    template.template_category?.name?.toLowerCase() ?? "sablon"
+                  } cozumu.`;
 
-                    <div className="p-8 flex-1 flex flex-col">
-                        <div className="flex items-center gap-2 mb-4">
-                            <span className="w-1.5 h-1.5 rounded-full bg-macework animate-pulse" />
-                            <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{template.template_category?.name || "Şablon"}</span>
-                        </div>
-                      
-                        <h3 className="text-xl font-bold tracking-tight text-foreground mb-3 group-hover:text-macework transition-colors">
+                return (
+                  <motion.div
+                    key={template.id}
+                    layout
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Link
+                      href={`/sablonlar/${template.slug}`}
+                      className="group flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-none transition-all duration-500 hover:border-macework/50 hover:shadow-xl hover:shadow-macework/5"
+                    >
+                      <div className="relative aspect-[16/10] overflow-hidden">
+                        <img
+                          src={resolveMediaUrl(
+                            template.preview_image ?? template.cover_image ?? template.image
+                          )}
+                          alt={template.title}
+                          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/80 via-black/20 to-transparent p-8 opacity-0 transition-opacity group-hover:opacity-100">
+                          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-macework">
+                            {template.template_category?.name || "Sablon"}
+                          </span>
+                          <h4 className="mt-1 text-xl font-bold tracking-tight text-white">
                             {template.title}
-                        </h3>
-                      
-                        <p className="text-muted-foreground text-sm leading-relaxed mb-8 flex-1">
-                            Modern tasarımı ve güçlü altyapısıyla markanızı bir adım öne çıkaracak profesyonel {template.template_category?.name ? template.template_category.name.toLowerCase() : "şablon"} çözümü.
-                        </p>
-    
-                        <div className="flex items-center justify-between pt-6 border-t border-border/40 group/link">
-                            <span className="text-xs font-bold text-foreground group-hover/link:text-macework transition-colors uppercase tracking-widest">Canlı Demo</span>
-                            <div className="w-9 h-9 rounded-full bg-muted/60 border border-border flex items-center justify-center group-hover/link:bg-macework group-hover/link:text-white transition-all">
-                               <ArrowRight className="w-4 h-4" />
-                            </div>
+                          </h4>
                         </div>
-                    </div>
-                  </Link>
-                </motion.div>
-              ))}
+                      </div>
+
+                      <div className="flex flex-1 flex-col p-8">
+                        <div className="mb-4 flex items-center gap-2">
+                          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-macework" />
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                            {template.template_category?.name || "Sablon"}
+                          </span>
+                        </div>
+
+                        <h3 className="mb-3 text-xl font-bold tracking-tight text-foreground transition-colors group-hover:text-macework">
+                          {template.title}
+                        </h3>
+
+                        <p className="mb-8 flex-1 text-sm leading-relaxed text-muted-foreground">
+                          {summary}
+                        </p>
+
+                        <div className="group/link flex items-center justify-between border-t border-border/40 pt-6">
+                          <span className="text-xs font-bold uppercase tracking-widest text-foreground transition-colors group-hover/link:text-macework">
+                            Canli Demo
+                          </span>
+                          <div className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-muted/60 transition-all group-hover/link:bg-macework group-hover/link:text-white">
+                            <ArrowRight className="w-4 h-4" />
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  </motion.div>
+                );
+              })}
             </AnimatePresence>
           </motion.div>
 
-          {/* Contact Section */}
-          <div className="mt-32 p-12 md:p-20 rounded-[3rem] bg-card border border-border/60 relative overflow-hidden text-center">
-             <div className="absolute top-0 right-0 w-96 h-96 bg-macework/10 blur-[120px] -mr-48 -mt-48"></div>
-             <div className="relative z-10 space-y-8">
-                 <div className="w-16 h-16 rounded-2xl bg-macework/10 flex items-center justify-center text-macework mx-auto mb-6">
-                    <Layers className="w-8 h-8" />
-                 </div>
-                 <h2 className="text-3xl md:text-4xl font-bold tracking-tight leading-tight">Size Özel Bir Şablona mı İhtiyacınız Var?</h2>
-                 <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-medium leading-relaxed">
-                     Şablonlarımızı projenize özel olarak özelleştirebilir veya sıfırdan markanıza uygun bir yapı inşa edebiliriz.
-                 </p>
-                 <Link 
-                    href="/iletisim"
-                    className="inline-flex items-center gap-2 bg-macework hover:bg-macework-hover text-white px-10 py-5 rounded-full text-lg font-bold transition-all group active:scale-95"
-                 >
-                    Bizimle İletişime Geçin
-                    <MoveRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
-                 </Link>
-             </div>
+          <div className="relative mt-32 overflow-hidden rounded-[3rem] border border-border/60 bg-card p-12 text-center md:p-20">
+            <div className="absolute -right-48 -top-48 h-96 w-96 bg-macework/10 blur-[120px]"></div>
+            <div className="relative z-10 space-y-8">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-macework/10 text-macework">
+                <Layers className="w-8 h-8" />
+              </div>
+              <h2 className="text-3xl font-bold leading-tight tracking-tight md:text-4xl">
+                {globalSettings?.cta_heading || "Size Ozel Bir Sablona mi Ihtiyaciniz Var?"}
+              </h2>
+              <p className="mx-auto max-w-2xl text-lg font-medium leading-relaxed text-muted-foreground">
+                {globalSettings?.cta_description ||
+                  "Sablonlarimizi projenize ozel olarak ozellestirebilir veya sifirdan markaniza uygun bir yapi insa edebiliriz."}
+              </p>
+              <Link
+                href={globalSettings?.cta_button_url || "/iletisim"}
+                className="group inline-flex items-center gap-2 rounded-full bg-macework px-10 py-5 text-lg font-bold text-white transition-all active:scale-95 hover:bg-macework-hover"
+              >
+                {globalSettings?.cta_button_label || "Bizimle Iletisime Gecin"}
+                <MoveRight className="w-5 h-5 transition-transform group-hover:translate-x-1.5" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
     </main>
   );
 }
-

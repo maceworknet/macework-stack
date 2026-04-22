@@ -2,7 +2,7 @@
 
 import { Layers, Server, Zap, Palette } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
-import { getStrapiMedia } from "@/lib/strapi";
+import { resolveMediaUrl } from "@/lib/media";
 
 const icons: Record<string, React.ElementType> = {
   "layers": Layers,
@@ -15,6 +15,14 @@ export function WhyMaceworkSection({ data }: { data?: any }) {
   const heading = data?.why_macework_heading || "Neden Macework?";
   const description = data?.why_macework_description || "Sunduğumuz hizmetlerdeki temel odak noktamız...";
   const features = data?.why_macework_features || [];
+  const visualMode = data?.why_macework_visual_mode || "card";
+  const imageUrl =
+    typeof data?.why_macework_image === "string"
+      ? data.why_macework_image
+      : data?.why_macework_image?.url;
+  const cardItems = Array.isArray(data?.why_macework_card_items)
+    ? data.why_macework_card_items
+    : [];
 
   return (
     <section id="about" className="py-24 overflow-hidden">
@@ -30,7 +38,7 @@ export function WhyMaceworkSection({ data }: { data?: any }) {
             
             <div className="grid sm:grid-cols-2 gap-8">
               {features.map((reason: any, idx: number) => {
-                const Icon = icons[reason.icon || "zap"] || Zap;
+                const Icon = icons[reason.icon || reason.iconName || "zap"] || Zap;
                 return (
                   <div key={idx} className="space-y-3">
                     <div className="w-10 h-10 rounded-md bg-muted flex items-center justify-center text-macework">
@@ -49,9 +57,9 @@ export function WhyMaceworkSection({ data }: { data?: any }) {
           <div className="relative">
             <div className="absolute inset-0 bg-macework/5 blur-[100px] rounded-full"></div>
             
-            {data?.why_macework_image?.url ? (
+            {visualMode === "image" && imageUrl ? (
                <img 
-                 src={getStrapiMedia(data.why_macework_image.url)} 
+                 src={resolveMediaUrl(imageUrl)}
                  alt="Neden Macework" 
                  className="relative z-10 w-full rounded-2xl object-cover shadow-2xl border border-border/50"
                />
@@ -61,19 +69,32 @@ export function WhyMaceworkSection({ data }: { data?: any }) {
                     <div className="flex items-center gap-4 border-b border-border pb-6">
                         <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center font-bold text-macework text-xs">M</div>
                         <div>
-                          <div className="font-semibold text-sm">Next-Gen Delivery</div>
-                          <div className="text-[10px] text-muted-foreground uppercase tracking-widest">Standardized Quality</div>
+                          <div className="font-semibold text-sm">
+                            {data?.why_macework_card_title || "Next-Gen Delivery"}
+                          </div>
+                          <div className="text-[10px] text-muted-foreground uppercase tracking-widest">
+                            {data?.why_macework_card_subtitle || "Standardized Quality"}
+                          </div>
                         </div>
                     </div>
                     
                     <div className="space-y-3">
-                        {[1, 2, 3].map(i => (
-                          <div key={i} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border border-border/50">
+                        {(cardItems.length
+                          ? cardItems
+                          : [
+                              { label: "Strateji", value: "Hazir" },
+                              { label: "Tasarim", value: "Devam" },
+                              { label: "Gelistirme", value: "Aktif" },
+                            ]
+                        ).map((item: any, i: number) => (
+                          <div key={`${item.label}-${i}`} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border border-border/50">
                             <div className="flex items-center gap-3">
                               <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
-                              <div className="h-2 w-24 bg-muted-foreground/20 rounded-full"></div>
+                              <span className="text-xs font-bold text-muted-foreground">
+                                {item.label}
+                              </span>
                             </div>
-                            <div className="h-2 w-12 bg-macework/20 rounded-full"></div>
+                            <span className="text-xs font-black text-macework">{item.value}</span>
                           </div>
                         ))}
                     </div>
@@ -94,4 +115,3 @@ export function WhyMaceworkSection({ data }: { data?: any }) {
     </section>
   );
 }
-

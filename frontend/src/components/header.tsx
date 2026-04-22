@@ -11,11 +11,26 @@ import { ModeToggle } from "./mode-toggle";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./ui/button";
 
-export function Header() {
+export function Header({
+  settings,
+  footerSettings,
+}: {
+  settings?: any;
+  footerSettings?: any;
+}) {
   const [scrolled, setScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigation = (settings?.navigation?.length
+    ? settings.navigation
+    : siteContent.header.navigation
+  ).filter((item: any) => item.published !== false);
+  const cta = {
+    label: settings?.cta_label || siteContent.header.cta.label,
+    href: settings?.cta_href || siteContent.header.cta.href,
+  };
+  const megaLabel = settings?.mega_menu_label || "Çözümler";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,7 +52,12 @@ export function Header() {
   return (
     <>
       {/* Mobile Drawer */}
-      <MobileNav isOpen={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen} />
+      <MobileNav
+        isOpen={isMobileMenuOpen}
+        onOpenChange={setIsMobileMenuOpen}
+        settings={settings}
+        footerSettings={footerSettings}
+      />
 
       <div className="fixed top-0 inset-x-0 z-50 flex justify-center pt-4 px-4 pointer-events-none">
         <AnimatePresence>
@@ -59,7 +79,7 @@ export function Header() {
                 <div className="flex-1 lg:flex-none">
                   <Link href="/" className="flex items-center gap-2 group notranslate" translate="no">
                     <span className="text-lg font-bold tracking-tighter">
-                      Macework<span className="text-macework">.</span>
+                      {settings?.logo_text || "Macework"}<span className="text-macework">.</span>
                     </span>
                   </Link>
                 </div>
@@ -67,13 +87,18 @@ export function Header() {
                 {/* Desktop Nav */}
                 <nav className="hidden lg:flex items-center absolute left-1/2 -translate-x-1/2">
                   <div className="flex items-center gap-1">
-                    {siteContent.header.navigation.map((item) => (
-                      item.label === "Çözümler" ? (
-                        <MegaMenu key={item.label} label={item.label} />
+                    {navigation.map((item: any) => (
+                      item.type === "mega" || item.label === megaLabel ? (
+                        <MegaMenu
+                          key={item.label}
+                          label={item.label}
+                          columns={settings?.mega_menu_columns}
+                        />
                       ) : (
                         <Link
                           key={item.label}
                           href={item.href}
+                          target={item.target === "_blank" ? "_blank" : undefined}
                           className="text-sm font-medium px-4 py-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all font-sans"
                         >
                           {item.label}
@@ -87,8 +112,8 @@ export function Header() {
                 <div className="flex items-center gap-2 flex-1 lg:flex-none justify-end">
                   <ModeToggle />
                   <Button asChild size="sm" className="hidden md:flex rounded-full px-5 text-sm">
-                    <Link href={siteContent.header.cta.href}>
-                      {siteContent.header.cta.label}
+                    <Link href={cta.href}>
+                      {cta.label}
                       <ArrowRight className="ml-2 w-4 h-4" />
                     </Link>
                   </Button>
@@ -113,4 +138,3 @@ export function Header() {
     </>
   );
 }
-

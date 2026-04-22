@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Send, CheckCircle2 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
@@ -15,17 +14,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { STRAPI_URL } from "@/lib/strapi";
+
+const initialLeadFormData = {
+  name: "",
+  company: "",
+  email: "",
+  interest: "SaaS Ürünleri",
+  message: "",
+};
 
 export function LeadForm({ contactSettings }: { contactSettings?: any }) {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-  const [formData, setFormData] = useState({
-    name: "",
-    company: "",
-    email: "",
-    interest: "SaaS Ürünleri",
-    message: ""
-  });
+  const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [formData, setFormData] = useState(initialLeadFormData);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -38,22 +39,33 @@ export function LeadForm({ contactSettings }: { contactSettings?: any }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("submitting");
+    setFeedbackMessage("");
     
     try {
-      const res = await fetch(`${STRAPI_URL}/api/leads`, {
+      const res = await fetch("/api/leads", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ data: formData }),
+        body: JSON.stringify({ ...formData, source: "home-lead-form" }),
       });
-      
-      if (!res.ok) throw new Error("Gönderim başarısız");
+
+      const body = await res.json().catch(() => null);
+      if (!res.ok || !body?.stored) {
+        throw new Error(body?.error ?? "Gönderim başarısız oldu");
+      }
+
+      setFormData(initialLeadFormData);
+      setFeedbackMessage("Mesajınız başarıyla gönderildi ve panelde Mesajlar alanına düştü.");
       setStatus("success");
     } catch (err) {
       console.error(err);
+      setFeedbackMessage(
+        err instanceof Error
+          ? err.message
+          : "Mesaj gönderilemedi. Lütfen birkaç dakika sonra tekrar deneyin."
+      );
       setStatus("error");
-      setTimeout(() => setStatus("idle"), 3000);
     }
   };
 
@@ -65,11 +77,15 @@ export function LeadForm({ contactSettings }: { contactSettings?: any }) {
         </div>
         <CardTitle className="text-2xl font-bold">Mesajınız Alındı!</CardTitle>
         <CardDescription className="text-base">
-          Ekibimiz en kısa sürede sizinle iletişime geçecektir. Macework Creative'e gösterdiğiniz ilgi için teşekkürler.
+          {feedbackMessage ||
+            "Ekibimiz en kısa sürede sizinle iletişime geçecektir. Macework Creative'e gösterdiğiniz ilgi için teşekkürler."}
         </CardDescription>
         <Button 
           variant="link"
-          onClick={() => setStatus("idle")}
+          onClick={() => {
+            setStatus("idle");
+            setFeedbackMessage("");
+          }}
           className="text-macework h-auto p-0"
         >
           Yeni bir mesaj gönder
@@ -97,6 +113,14 @@ export function LeadForm({ contactSettings }: { contactSettings?: any }) {
             
             <CardContent className="p-8 md:p-12 relative z-10">
               <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {status === "error" ? (
+                  <div
+                    role="alert"
+                    className="md:col-span-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-bold text-red-700"
+                  >
+                    {feedbackMessage || "Mesaj gönderilemedi. Lütfen tekrar deneyin."}
+                  </div>
+                ) : null}
                 <div className="space-y-2">
                   <Label htmlFor="name">Ad Soyad</Label>
                   <Input 
@@ -155,12 +179,13 @@ export function LeadForm({ contactSettings }: { contactSettings?: any }) {
 
                 <div className="md:col-span-2 pt-4">
                   <Button 
+                    type="submit"
                     disabled={status === "submitting"}
                     className="w-full h-14 font-bold bg-macework hover:bg-macework-hover text-white shadow-none rounded-xl text-xs uppercase tracking-widest"
                   >
                     {status === "submitting" ? (
                       <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    ) : status === "error" ? "Hata! Tekrar deneyin." : (
+                    ) : (
                       <>
                         {contactSettings?.form_button_text || "Teklif Al"}
                         <Send className="ml-2 w-4 h-4" />
@@ -179,4 +204,3 @@ export function LeadForm({ contactSettings }: { contactSettings?: any }) {
     </section>
   );
 }
-

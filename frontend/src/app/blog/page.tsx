@@ -1,6 +1,8 @@
 import { SubPageHeader } from "@/components/subpage-header";
-import { fetchStrapi } from "@/lib/strapi";
 import { BlogList } from "@/components/blog-list";
+import { getBlogCategories, getBlogPageSettings, getBlogPosts } from "@/lib/cms";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Blog & Haberler | Macework",
@@ -8,18 +10,18 @@ export const metadata = {
 };
 
 export default async function BlogPage() {
-  const [posts, categories, globalSettings] = await Promise.all([
-    fetchStrapi<any[]>("blog-posts", { populate: ['blog_category', 'tags', 'cover_image'] }),
-    fetchStrapi<any[]>("blog-categories", { populate: '*' }).catch(() => []),
-    fetchStrapi<any>("global-setting", { populate: '*' }).catch(() => null)
+  const [posts, categories, pageSettings] = await Promise.all([
+    getBlogPosts(),
+    getBlogCategories(),
+    getBlogPageSettings()
   ]);
 
   return (
     <main className="min-h-screen">
       <SubPageHeader 
-        badge="Blog & Haberler"
-        title={globalSettings?.blog_page_title || "Dünyadan Haberler"}
-        description={globalSettings?.blog_page_desc || "Teknoloji, tasarım ve dijital ürün dünyasından güncel içerikler, vaka analizleri ve ajans günlüğümüz."}
+        badge={pageSettings?.eyebrow || "Blog & Haberler"}
+        title={pageSettings?.heading || "Dünyadan Haberler"}
+        description={pageSettings?.description || "Teknoloji, tasarım ve dijital ürün dünyasından güncel içerikler, vaka analizleri ve ajans günlüğümüz."}
       />
 
       <section className="py-20 bg-background">
