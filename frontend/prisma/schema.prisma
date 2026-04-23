@@ -27,6 +27,8 @@ model User {
   sessions     Session[]
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
+
+  @@map("user")
 }
 
 model Session {
@@ -39,6 +41,7 @@ model Session {
 
   @@index([userId])
   @@index([expiresAt])
+  @@map("session")
 }
 
 model SiteSetting {
@@ -46,6 +49,8 @@ model SiteSetting {
   value     Json
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("sitesetting")
 }
 
 model MediaFile {
@@ -56,6 +61,8 @@ model MediaFile {
   mimeType     String
   size         Int
   createdAt    DateTime @default(now())
+
+  @@map("mediafile")
 }
 
 model Lead {
@@ -64,7 +71,7 @@ model Lead {
   company   String?
   email     String
   interest  String?
-  message   String    @db.Text
+  message   String     @db.Text
   source    String?
   status    LeadStatus @default(NEW)
   createdAt DateTime   @default(now())
@@ -72,30 +79,32 @@ model Lead {
 
   @@index([status])
   @@index([createdAt])
+  @@map("lead")
 }
 
 model Product {
-  id              String   @id @default(cuid())
-  title           String
-  slug            String   @unique
-  description     String   @db.Text
-  shortDescription String? @db.Text
-  longDescription String?  @db.LongText
-  badge           String?
-  tag             String?
-  category        String?
-  version         String?
-  platformType    String?
-  platformUrl     String?
-  coverImage      String?
-  features        Json?
-  contentBlocks   Json?
-  published       Boolean  @default(true)
-  sortOrder       Int      @default(0)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id               String   @id @default(cuid())
+  title            String
+  slug             String   @unique
+  description      String   @db.Text
+  shortDescription String?  @db.Text
+  longDescription  String?  @db.LongText
+  badge            String?
+  tag              String?
+  category         String?
+  version          String?
+  platformType     String?
+  platformUrl      String?
+  coverImage       String?
+  features         Json?
+  contentBlocks    Json?
+  published        Boolean  @default(true)
+  sortOrder        Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   @@index([published, sortOrder])
+  @@map("product")
 }
 
 model Solution {
@@ -116,6 +125,7 @@ model Solution {
   updatedAt        DateTime @updatedAt
 
   @@index([published, sortOrder])
+  @@map("solution")
 }
 
 model Project {
@@ -138,6 +148,7 @@ model Project {
   updatedAt       DateTime @updatedAt
 
   @@index([published, featured, sortOrder])
+  @@map("project")
 }
 
 model BlogPost {
@@ -158,6 +169,7 @@ model BlogPost {
   updatedAt   DateTime  @updatedAt
 
   @@index([published, publishedAt])
+  @@map("blogpost")
 }
 
 model Template {
@@ -176,6 +188,7 @@ model Template {
   updatedAt    DateTime @updatedAt
 
   @@index([published, sortOrder])
+  @@map("template")
 }
 
 model TeamMember {
@@ -190,4 +203,5 @@ model TeamMember {
   updatedAt DateTime @updatedAt
 
   @@index([published, sortOrder])
+  @@map("teammember")
 }
