@@ -83,14 +83,14 @@ const fallbackHomePage = {
   products_section_heading: siteContent.products.sectionTitle,
   products_section_description: siteContent.products.sectionDescription,
   featured_product_slugs: [],
-  solutions_section_heading: "Kapsamli Dijital Cozumler",
+  solutions_section_heading: "Kapsamlı Dijital Çözümler",
   solutions_section_description:
-    "Isletmenizin dijital donusum yolculugunda her adimda yaninizdayiz. Stratejiden tasarima, yazilimdan buyumeye kadar tam hizmet.",
+    "İşletmenizin dijital dönüşüm yolculuğunda her adımda yanınızdayız. Stratejiden tasarıma, yazılımdan büyümeye kadar tam hizmet.",
   featured_solution_slugs: [],
   work_section_heading: siteContent.works.sectionTitle,
   work_section_description:
-    "Dijitalde iz birakan, problem cozen ve binlerce kullaniciya ulasan projelerimizden bazilari.",
-  work_section_button_label: "Tum Projeleri Gor",
+    "Dijitalde iz bırakan, problem çözen ve binlerce kullanıcıya ulaşan projelerimizden bazıları.",
+  work_section_button_label: "Tüm Projeleri Gör",
   work_section_button_url: "/islerimiz",
   featured_project_slugs: [],
   process_section_heading: siteContent.process.sectionTitle,
@@ -111,39 +111,39 @@ const fallbackHomePage = {
   ],
   why_macework_image: null,
   process_steps: fallbackProcessSteps,
-  lead_section_heading: "Yeni Bir Projeye Baslayalim",
+  lead_section_heading: "Yeni Bir Projeye Başlayalım",
   lead_section_description:
-    "Fikrinizi urune donusturmek veya markanizi dijitalde buyutmek icin ilk adimi atin.",
+    "Fikrinizi ürüne dönüştürmek veya markanızı dijitalde büyütmek için ilk adımı atın.",
   lead_button_label: "Teklif Al",
   trusted_brands_logos: [],
 };
 
 const fallbackGlobalSettings = {
   site_name: "Macework",
-  seo_default_title: "Macework Creativ - Yaratici Teknoloji ve Urun Studyosu",
+  seo_default_title: "Macework Creativ - Yaratıcı Teknoloji ve Ürün Stüdyosu",
   seo_default_description:
-    "Macework Creativ, yenilikci SaaS urunleri, olceklenebilir dijital cozumler ve modern teknoloji altyapilari gelistiren kreatif studyodur.",
+    "Macework Creativ, yenilikçi SaaS ürünleri, ölçeklenebilir dijital çözümler ve modern teknoloji altyapıları geliştiren kreatif stüdyodur.",
   footer_description: siteContent.footer.description,
   footer_email: siteContent.contact.email,
   footer_phone: siteContent.contact.phone,
-  blog_page_title: "Dunyadan Haberler",
+  blog_page_title: "Dünyadan Haberler",
   blog_page_desc:
-    "Teknoloji, tasarim ve dijital urun dunyasindan guncel icerikler, vaka analizleri ve ajans gunlugumuz.",
-  projects_page_title: "Neler Yaptik?",
+    "Teknoloji, tasarım ve dijital ürün dünyasından güncel içerikler, vaka analizleri ve ajans günlüğümüz.",
+  projects_page_title: "Neler Yaptık?",
   projects_page_desc: siteContent.works.sectionTitle,
-  templates_page_title: "Hazir Sablonlarimizi Kesfedin",
+  templates_page_title: "Hazır Şablonlarımızı Keşfedin",
   templates_page_desc:
-    "Isletmeniz icin ozellestirilebilir, modern ve yuksek performansli hazir web altyapilari.",
+    "İşletmeniz için özelleştirilebilir, modern ve yüksek performanslı hazır web altyapıları.",
 };
 
 const fallbackContactPage = {
   eyebrow: "Iletisim",
-  heading: "Bize Ulasin",
+  heading: "Bize Ulaşın",
   subheading:
-    "Fikrinizi urune donusturmek veya markanizi dijitalde buyutmek icin ilk adimi atin.",
-  info_heading: "Iletisim Bilgileri",
+    "Fikrinizi ürüne dönüştürmek veya markanızı dijitalde büyütmek için ilk adımı atın.",
+  info_heading: "İletişim Bilgileri",
   info_description:
-    "Markanizi dijitalde parlatmak ve yenilikci teknoloji cozumlerimizle tanismak icin ekibimizle dogrudan iletisime gecin.",
+    "Markanızı dijitalde parlatmak ve yenilikçi teknoloji çözümlerimizle tanışmak için ekibimizle doğrudan iletişime geçin.",
   phone_label: "Telefon",
   email: siteContent.contact.email,
   email_label: "E-posta",
@@ -151,28 +151,28 @@ const fallbackContactPage = {
   address_label: "Adres",
   address: siteContent.contact.address,
   whatsapp_number: "905000000000",
-  whatsapp_intro: "Hizli cevap icin",
-  whatsapp_text: "WhatsApp'tan ulasin.",
-  form_heading: "Yeni Bir Projeye Baslayalim",
+  whatsapp_intro: "Hızlı cevap için",
+  whatsapp_text: "WhatsApp'tan ulaşın.",
+  form_heading: "Yeni Bir Projeye Başlayalım",
   form_subheading:
-    "Fikrinizi urune donusturmek veya markanizi dijitalde buyutmek icin ilk adimi atin.",
+    "Fikrinizi ürüne dönüştürmek veya markanızı dijitalde büyütmek için ilk adımı atın.",
   form_placeholder_name: "Ad Soyad",
-  form_placeholder_company: "Firma adi",
+  form_placeholder_company: "Firma adı",
   form_placeholder_email: "iletisim@macework.com",
   form_placeholder_message: "Projenizden veya talebinizden bahsedin...",
   form_button_text: "Teklif Al",
-  trusted_brands_heading: "GUVENEN MARKALAR & PROJELERIMIZ",
+  trusted_brands_heading: "GÜVENEN MARKALAR & PROJELERİMİZ",
 };
 
 const fallbackProjectsPage = {
-  eyebrow: "Islerimiz",
-  heading: "Neler Yaptik?",
+  eyebrow: "İşlerimiz",
+  heading: "Neler Yaptık?",
   description:
-    "Dijitalde iz birakan, problem cozen ve binlerce kullaniciya ulasan projelerimizden bazilari.",
-  cta_heading: "Sizin Projeniz de Burada Olmali mi?",
+    "Dijitalde iz bırakan, problem çözen ve binlerce kullanıcıya ulaşan projelerimizden bazıları.",
+  cta_heading: "Sizin Projeniz de Burada Olmalı mı?",
   cta_description:
-    "Markaniz icin en dogru teknoloji stratejisini belirleyelim ve birlikte dijitalin kurallarini yeniden yazalim.",
-  cta_button_label: "Proje Baslat",
+    "Markanız için en doğru teknoloji stratejisini belirleyelim ve birlikte dijitalin kurallarını yeniden yazalım.",
+  cta_button_label: "Proje Başlat",
   cta_button_url: "/iletisim",
 };
 
@@ -180,18 +180,18 @@ const fallbackBlogPage = {
   eyebrow: "Blog & Haberler",
   heading: "Dunyadan Haberler",
   description:
-    "Teknoloji, tasarim ve dijital urun dunyasindan guncel icerikler, vaka analizleri ve ajans gunlugumuz.",
+    "Teknoloji, tasarım ve dijital ürün dünyasından güncel içerikler, vaka analizleri ve ajans günlüğümüz.",
 };
 
 const fallbackTemplatesPage = {
-  eyebrow: "Sablon Kutuphanesi",
-  heading: "Hazir Sablonlarimizi Kesfedin",
+  eyebrow: "Şablon Kütüphanesi",
+  heading: "Hazır Şablonlarımızı Keşfedin",
   description:
-    "Isletmeniz icin ozellestirilebilir, modern ve yuksek performansli hazir web altyapilari.",
-  cta_heading: "Size Ozel Bir Sablona mi Ihtiyaciniz Var?",
+    "İşletmeniz için özelleştirilebilir, modern ve yüksek performanslı hazır web altyapıları.",
+  cta_heading: "Size Özel Bir Şablona mı İhtiyacınız Var?",
   cta_description:
-    "Sablonlarimizi projenize ozel olarak ozellestirebilir veya sifirdan markaniza uygun bir yapi insa edebiliriz.",
-  cta_button_label: "Bizimle Iletisime Gecin",
+    "Şablonlarımızı projenize özel olarak özelleştirebilir veya sıfırdan markanıza uygun bir yapı inşa edebiliriz.",
+  cta_button_label: "Bizimle İletişime Geçin",
   cta_button_url: "/iletisim",
 };
 
@@ -266,8 +266,8 @@ const fallbackAboutPage = {
   team_heading: "Uzman Kadromuz",
   team_description: "Modern teknolojileri kullanan, yaratici ve enerjik ekibimizle tanisin.",
   cta_heading: "Birlikte Deger Yaratalim",
-  cta_description: "Vizyonunuzu teknik mukemmeliyetle bulusturmak icin buradayiz.",
-  cta_button_label: "Hemen Baslayalim",
+  cta_description: "Vizyonunuzu teknik mükemmeliyetle buluşturmak için buradayız.",
+  cta_button_label: "Hemen Başlayalım",
   cta_button_url: "/iletisim",
 };
 
@@ -290,7 +290,7 @@ const fallbackSolutions: AnyRecord[] = siteContent.solutionsDetail.map((solution
   ...solution,
   id: solution.slug,
   documentId: solution.slug,
-  badge_text: "Cozumlerimiz",
+  badge_text: "Çözümlerimiz",
   short_description: solution.description,
   icon: toLucideName(menuIcons.get(solution.slug)),
   features: solution.features.map((title) => ({ title })),
@@ -330,7 +330,7 @@ const fallbackTemplates: AnyRecord[] = siteContent.templates.items.map((template
   cover_image: media(template.image),
   template_category: { name: template.category },
   demo_url: template.href,
-  features: ["Yuksek Performans", "Mobil Uyumlu", "SEO Odakli"],
+  features: ["Yüksek Performans", "Mobil Uyumlu", "SEO Odaklı"],
   sortOrder: index,
 }));
 
@@ -373,6 +373,8 @@ function mapProject(project: AnyRecord) {
     ...project,
     documentId: project.id,
     live_url: project.liveUrl,
+    cta_button_label: project.ctaButtonLabel,
+    cta_button_url: project.ctaButtonUrl,
     cover_image: media(project.coverImage),
     gallery: mediaList(project.gallery),
     tags: asArray(project.tags),

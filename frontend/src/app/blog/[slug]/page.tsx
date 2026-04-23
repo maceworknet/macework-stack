@@ -48,7 +48,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
                   {post.content ? (
                     <RichContent content={post.content} />
                   ) : (
-                    <p>{post.summary || "Icerik yuklenemedi."}</p>
+                    <p>{post.summary || "İçerik yüklenemedi."}</p>
                   )}
                 </div>
               </article>
@@ -80,9 +80,9 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
             <div className="select-none lg:col-span-4">
               <div className="sticky top-32 space-y-10 rounded-[2.5rem] border border-border bg-card p-10 shadow-sm shadow-black/5">
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold tracking-tight text-foreground">Yazi Bilgileri</h3>
+                  <h3 className="text-xl font-bold tracking-tight text-foreground">Yazı Bilgileri</h3>
                   <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
-                    Yazar ve yayin detaylari
+                    Yazar ve yayın detayları
                   </p>
                 </div>
 
@@ -104,12 +104,12 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
                             month: "long",
                             day: "numeric",
                           })
-                        : post.date || "Bugun"}
+                        : post.date || "Bugün"}
                     </span>
                   </div>
                   <div className="flex items-center justify-between border-b border-border/40 pb-4 text-foreground">
                     <span className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
-                      <Clock className="h-3.5 w-3.5" /> Sure
+                      <Clock className="h-3.5 w-3.5" /> Süre
                     </span>
                     <span className="text-sm font-bold tracking-tight">
                       {post.read_time || post.readTime || 5} Dk

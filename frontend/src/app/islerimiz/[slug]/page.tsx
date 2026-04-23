@@ -37,7 +37,7 @@ export default async function WorkDetailPage({ params }: { params: Promise<{ slu
           </div>
           {work.live_url ? (
             <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider">
-              <Globe className="h-4 w-4 text-macework" /> Yayinda
+              <Globe className="h-4 w-4 text-macework" /> Yayında
             </div>
           ) : null}
         </div>
@@ -62,7 +62,7 @@ export default async function WorkDetailPage({ params }: { params: Promise<{ slu
 
               {work.tags?.length ? (
                 <div className="space-y-6">
-                  <h2 className="text-xl font-bold tracking-tight text-foreground">Teknoloji Yigini</h2>
+                  <h2 className="text-xl font-bold tracking-tight text-foreground">Teknoloji Yığını</h2>
                   <div className="grid gap-4 sm:grid-cols-2">
                     {work.tags.map((tech: string) => (
                       <div
@@ -94,29 +94,29 @@ export default async function WorkDetailPage({ params }: { params: Promise<{ slu
                 <div className="space-y-6">
                   <div className="flex items-center justify-between border-b border-border/40 pb-4 text-foreground">
                     <span className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
-                      Musteri
+                      Müşteri
                     </span>
                     <span className="text-sm font-bold tracking-tight">{work.client || "Gizli"}</span>
                   </div>
                   <div className="flex items-center justify-between border-b border-border/40 pb-4 text-foreground">
                     <span className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
-                      Sure
+                      Süre
                     </span>
                     <span className="text-sm font-bold tracking-tight">4-6 Ay</span>
                   </div>
                   <div className="flex items-center justify-between text-foreground">
                     <span className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
-                      Yil
+                      Yıl
                     </span>
                     <span className="text-sm font-bold tracking-tight">{work.year}</span>
                   </div>
                 </div>
 
                 <Link
-                  href="/iletisim"
+                  href={work.cta_button_url || "/iletisim"}
                   className="flex w-full items-center justify-center gap-2 rounded-full bg-foreground py-5 text-sm font-bold uppercase tracking-widest text-background transition-all hover:scale-[1.02] active:scale-95"
                 >
-                  Teklif Al
+                  {work.cta_button_label || "Teklif Al"}
                   <ArrowLeft className="h-4 w-4 rotate-180" />
                 </Link>
 

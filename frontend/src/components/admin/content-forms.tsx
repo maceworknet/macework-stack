@@ -1094,6 +1094,21 @@ export function ProjectForm({
                   defaultValue={project?.live_url ?? project?.liveUrl}
                   fullWidth
                 />
+                <FormField
+                  label="CTA Buton Metni"
+                  name="ctaButtonLabel"
+                  defaultValue={project?.cta_button_label ?? project?.ctaButtonLabel}
+                  placeholder="Teklif Al"
+                  helperText="Proje detay sayfasındaki buton yazısı. Boş bırakılırsa 'Teklif Al' gösterilir."
+                />
+                <FormField
+                  label="CTA Buton Linki"
+                  name="ctaButtonUrl"
+                  type="url"
+                  defaultValue={project?.cta_button_url ?? project?.ctaButtonUrl}
+                  placeholder="/iletisim"
+                  helperText="Butonun yönlendireceği URL. Boş bırakılırsa iletişim sayfasına yönlendirir."
+                />
                 <TextAreaField
                   label="Kart açıklaması"
                   name="description"

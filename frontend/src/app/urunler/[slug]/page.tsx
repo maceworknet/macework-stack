@@ -28,7 +28,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   return (
     <main className="min-h-screen" suppressHydrationWarning>
       <SubPageHeader
-        badge={product.badge || "Urunumuz"}
+        badge={product.badge || "Ürünümüz"}
         title={product.title}
         description={headerDescription}
       >
@@ -38,7 +38,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/60 px-6 py-2.5 text-[11px] font-bold transition-all hover:bg-muted"
           >
             <ArrowRight className="h-3.5 w-3.5 rotate-180" />
-            Urunlere Don
+            Ürünlere Dön
           </Link>
         </div>
       </SubPageHeader>
@@ -55,7 +55,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 <div className="space-y-6">
                   <h2 className="flex items-center gap-3 text-2xl font-bold tracking-tight">
                     <span className="h-7 w-1.5 rounded-full bg-macework" />
-                    Urun Hakkinda
+                    Ürün Hakkında
                   </h2>
                   <RichContent
                     content={detailContent}
@@ -65,7 +65,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
                 {product.features && product.features.length > 0 ? (
                   <div className="space-y-8">
-                    <h3 className="text-xl font-bold tracking-tight">One Cikan Ozellikler</h3>
+                    <h3 className="text-xl font-bold tracking-tight">Öne Çıkan Özellikler</h3>
                     <div className="grid gap-4 sm:grid-cols-2">
                       {product.features.map((feature: any, idx: number) => (
                         <div
@@ -89,7 +89,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             <div className="select-none lg:col-span-4">
               <div className="sticky top-32 space-y-10 rounded-[2.5rem] border border-border bg-card p-10 shadow-sm shadow-black/5">
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold tracking-tight text-foreground">Urun Bilgileri</h3>
+                  <h3 className="text-xl font-bold tracking-tight text-foreground">Ürün Bilgileri</h3>
                   <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
                     Temel Bilgiler
                   </p>
@@ -98,7 +98,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 <div className="space-y-6">
                   <div className="flex items-center justify-between border-b border-border/40 pb-4 text-foreground">
                     <span className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
-                      <Rocket className="h-3.5 w-3.5" /> Surum
+                      <Rocket className="h-3.5 w-3.5" /> Sürüm
                     </span>
                     <span className="text-sm font-bold tracking-tight">{product.version || "1.0.0"}</span>
                   </div>
@@ -112,7 +112,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                   </div>
                   <div className="flex items-center justify-between border-b border-border/40 pb-4 text-foreground">
                     <span className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
-                      <Laptop className="h-3.5 w-3.5" /> Erisim
+                      <Laptop className="h-3.5 w-3.5" /> Erişim
                     </span>
                     <span className="text-sm italic tracking-tight text-foreground">
                       {product.platform_type || "Bulut (SaaS)"}
@@ -139,13 +139,13 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                     Destek Al
                   </p>
                   <p className="text-[11px] leading-snug text-muted-foreground">
-                    Bu platformla ilgili bir sorun mu yasiyorsunuz?
+                    Bu platformla ilgili bir sorun mu yaşıyorsunuz?
                   </p>
                   <Link
                     href="/iletisim"
                     className="inline-block text-[11px] font-bold text-macework underline decoration-macework/30 underline-offset-4 transition-all hover:decoration-macework"
                   >
-                    Musteri Hizmetlerine Yazin
+                    Müşteri Hizmetlerine Yazın
                   </Link>
                 </div>
               </div>

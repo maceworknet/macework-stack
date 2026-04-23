@@ -28,11 +28,11 @@ export default function TemplatesClient({
   return (
     <main className="min-h-screen">
       <SubPageHeader
-        badge={globalSettings?.eyebrow || "Sablon Kutuphanesi"}
-        title={globalSettings?.heading || "Hazir Sablonlarimizi Kesfedin"}
+        badge={globalSettings?.eyebrow || "Şablon Kütüphanesi"}
+        title={globalSettings?.heading || "Hazır Şablonlarımızı Keşfedin"}
         description={
           globalSettings?.description ||
-          "Isletmeniz icin ozellestirilebilir, modern ve yuksek performansli hazir web altyapilari."
+          "İşletmeniz için özelleştirilebilir, modern ve yüksek performanslı hazır web altyapıları."
         }
       />
 
@@ -60,7 +60,7 @@ export default function TemplatesClient({
                       />
                     )}
                     <span className="relative z-10">
-                      {category === "Hepsi" ? "Tum Sablonlar" : category}
+                      {category === "Hepsi" ? "Tüm Şablonlar" : category}
                     </span>
                   </button>
                 ))}
@@ -73,9 +73,9 @@ export default function TemplatesClient({
               {filteredTemplates.map((template) => {
                 const summary =
                   richTextToPlainText(template.description) ||
-                  `Modern tasarimi ve guclu altyapisiyla markanizi bir adim one cikaracak profesyonel ${
-                    template.template_category?.name?.toLowerCase() ?? "sablon"
-                  } cozumu.`;
+                  `Modern tasarımı ve güçlü altyapısıyla markanızı bir adım öne çıkaracak profesyonel ${
+                    template.template_category?.name?.toLowerCase() ?? "şablon"
+                  } çözümü.`;
 
                 return (
                   <motion.div
@@ -126,7 +126,7 @@ export default function TemplatesClient({
 
                         <div className="group/link flex items-center justify-between border-t border-border/40 pt-6">
                           <span className="text-xs font-bold uppercase tracking-widest text-foreground transition-colors group-hover/link:text-macework">
-                            Canli Demo
+                            Canlı Demo
                           </span>
                           <div className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-muted/60 transition-all group-hover/link:bg-macework group-hover/link:text-white">
                             <ArrowRight className="w-4 h-4" />
@@ -147,17 +147,17 @@ export default function TemplatesClient({
                 <Layers className="w-8 h-8" />
               </div>
               <h2 className="text-3xl font-bold leading-tight tracking-tight md:text-4xl">
-                {globalSettings?.cta_heading || "Size Ozel Bir Sablona mi Ihtiyaciniz Var?"}
+                {globalSettings?.cta_heading || "Size Özel Bir Şablona mı İhtiyacınız Var?"}
               </h2>
               <p className="mx-auto max-w-2xl text-lg font-medium leading-relaxed text-muted-foreground">
                 {globalSettings?.cta_description ||
-                  "Sablonlarimizi projenize ozel olarak ozellestirebilir veya sifirdan markaniza uygun bir yapi insa edebiliriz."}
+                  "Şablonlarımızı projenize özel olarak özelleştirebilir veya sıfırdan markanıza uygun bir yapı inşa edebiliriz."}
               </p>
               <Link
                 href={globalSettings?.cta_button_url || "/iletisim"}
                 className="group inline-flex items-center gap-2 rounded-full bg-macework px-10 py-5 text-lg font-bold text-white transition-all active:scale-95 hover:bg-macework-hover"
               >
-                {globalSettings?.cta_button_label || "Bizimle Iletisime Gecin"}
+                {globalSettings?.cta_button_label || "Bizimle İletişime Geçin"}
                 <MoveRight className="w-5 h-5 transition-transform group-hover:translate-x-1.5" />
               </Link>
             </div>

@@ -377,6 +377,8 @@ export async function saveProjectAction(formData: FormData) {
     client: optionalValue(formData, "client"),
     year: optionalValue(formData, "year"),
     liveUrl: optionalValue(formData, "liveUrl"),
+    ctaButtonLabel: optionalValue(formData, "ctaButtonLabel"),
+    ctaButtonUrl: optionalValue(formData, "ctaButtonUrl"),
     coverImage,
     gallery,
     tags: tagsJson(formData, "tags"),

@@ -138,6 +138,8 @@ model Project {
   client          String?
   year            String?
   liveUrl         String?
+  ctaButtonLabel  String?
+  ctaButtonUrl    String?
   coverImage      String?
   gallery         Json?
   tags            Json?

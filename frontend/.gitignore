@@ -21,8 +21,6 @@
 /build
 
 # local uploads
-/public/uploads/*
-!/public/uploads/.gitkeep
 
 # misc
 .DS_Store

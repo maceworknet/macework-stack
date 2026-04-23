@@ -38,7 +38,7 @@ export default async function SolutionDetailPage({ params }: { params: Promise<{
             className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/60 px-6 py-2.5 text-[11px] font-bold transition-all hover:bg-muted"
           >
             <ArrowRight className="h-3.5 w-3.5 rotate-180" />
-            Cozumlere Don
+            Çözümlere Dön
           </Link>
         </div>
       </SubPageHeader>
@@ -86,9 +86,9 @@ export default async function SolutionDetailPage({ params }: { params: Promise<{
             <div className="select-none lg:col-span-4">
               <div className="sticky top-32 space-y-8 rounded-[2.5rem] border border-border bg-card p-8 shadow-sm shadow-black/5">
                 <div className="space-y-1">
-                  <h3 className="text-lg font-bold tracking-tight">Nasil Calisiriz?</h3>
+                  <h3 className="text-lg font-bold tracking-tight">Nasıl Çalışırız?</h3>
                   <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                    Isleyis Sureci
+                    İşleyiş Süreci
                   </p>
                 </div>
 
@@ -117,7 +117,7 @@ export default async function SolutionDetailPage({ params }: { params: Promise<{
                     href="/iletisim"
                     className="flex w-full items-center justify-center gap-2 rounded-full bg-foreground py-4 text-[11px] font-bold uppercase tracking-widest text-background transition-all hover:scale-[1.02] active:scale-95"
                   >
-                    Hemen Baslayalim
+                    Hemen Başlayalım
                     <MoveRight className="h-3.5 w-3.5" />
                   </Link>
                 </div>
@@ -133,20 +133,20 @@ export default async function SolutionDetailPage({ params }: { params: Promise<{
             <div className="mb-16 flex flex-col justify-between gap-8 md:flex-row md:items-end">
               <div className="max-w-2xl space-y-4">
                 <span className="text-xs font-bold uppercase tracking-[0.2em] text-macework">
-                  Ozellestirilebilir Yapilar
+                  Özelleştirilebilir Yapılar
                 </span>
                 <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-                  Demo Sablonlarimiza Goz Atin
+                  Demo Şablonlarımıza Göz Atın
                 </h2>
                 <p className="text-lg font-normal text-muted-foreground">
-                  Isletmenizin ihtiyaclarina gore uyarlanabilen, modern ve test edilmis hazir altyapilarimizi inceleyin.
+                  İşletmenizin ihtiyaçlarına göre uyarlanabilen, modern ve test edilmiş hazır altyapılarımızı inceleyin.
                 </p>
               </div>
               <Link
                 href="/sablonlar"
                 className="group inline-flex items-center gap-2 text-sm font-semibold text-macework transition-all hover:underline"
               >
-                Tumunu Gor
+                Tümünü Gör
                 <MoveRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>

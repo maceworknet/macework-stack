@@ -22,18 +22,18 @@ export default async function TemplateDetailPage({
 
   const description =
     richTextToPlainText(template.description) ||
-    "Isletmeniz icin yuksek performansli dijital altyapi.";
+    "İşletmeniz için yüksek performanslı dijital altyapı.";
 
   return (
     <main className="min-h-screen bg-background">
-      <SubPageHeader badge="Hazir Sablon" title={template.title} description={description}>
+      <SubPageHeader badge="Hazır Şablon" title={template.title} description={description}>
         <div className="mt-6 flex items-center gap-4">
           <Link
             href="/sablonlar"
             className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/60 px-6 py-2.5 text-[11px] font-bold transition-all hover:bg-muted"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-            Tum Sablonlara Don
+            Tüm Şablonlara Dön
           </Link>
         </div>
       </SubPageHeader>
@@ -56,7 +56,7 @@ export default async function TemplateDetailPage({
               />
 
               <div className="grid gap-6 sm:grid-cols-2">
-                {(template.features || ["Yuksek Performans", "Mobil Uyumlu", "SEO Odakli"]).map(
+                {(template.features || ["Yüksek Performans", "Mobil Uyumlu", "SEO Odaklı"]).map(
                   (feature: any, index: number) => (
                     <div
                       key={index}
@@ -91,7 +91,7 @@ export default async function TemplateDetailPage({
                     rel="noreferrer"
                     className="flex w-full items-center justify-center gap-2 rounded-full bg-foreground py-5 text-xs font-bold uppercase tracking-widest text-background shadow-lg shadow-black/10 transition-all hover:scale-[1.02] active:scale-95"
                   >
-                    Canli Demoyu Gor
+                    Canlı Demoyu Gör
                     <ExternalLink className="h-4 w-4" />
                   </a>
                 ) : null}
