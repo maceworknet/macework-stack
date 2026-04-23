@@ -270,21 +270,20 @@ export async function deleteProductAction(formData: FormData) {
   const id = optionalValue(formData, "id");
   const slug = optionalValue(formData, "slug");
 
-  const currentSlug = await findRecordSlug(
-    () =>
-      id
-        ? prisma.product.findUnique({ where: { id }, select: { slug: true } })
-        : prisma.product.findUnique({ where: { slug: slug ?? "" }, select: { slug: true } }),
-    slug
-  );
+  const record = id
+    ? await prisma.product.findUnique({ where: { id }, select: { id: true, slug: true } }).catch(() => null)
+    : slug
+      ? await prisma.product.findUnique({ where: { slug }, select: { id: true, slug: true } }).catch(() => null)
+      : null;
 
-  if (id) {
-    await prisma.product.delete({ where: { id } }).catch(() => null);
-  } else if (slug) {
-    await prisma.product.delete({ where: { slug } }).catch(() => null);
-  }
+  if (!record) return;
 
-  revalidateSite([currentSlug ? `/urunler/${currentSlug}` : null]);
+  await prisma.product.delete({ where: { id: record.id } });
+
+  revalidateSite([`/urunler/${record.slug}`]);
+
+  const { redirect } = await import("next/navigation");
+  redirect("/admin/products");
 }
 
 export async function saveSolutionAction(formData: FormData) {
@@ -336,21 +335,20 @@ export async function deleteSolutionAction(formData: FormData) {
   const id = optionalValue(formData, "id");
   const slug = optionalValue(formData, "slug");
 
-  const currentSlug = await findRecordSlug(
-    () =>
-      id
-        ? prisma.solution.findUnique({ where: { id }, select: { slug: true } })
-        : prisma.solution.findUnique({ where: { slug: slug ?? "" }, select: { slug: true } }),
-    slug
-  );
+  const record = id
+    ? await prisma.solution.findUnique({ where: { id }, select: { id: true, slug: true } }).catch(() => null)
+    : slug
+      ? await prisma.solution.findUnique({ where: { slug }, select: { id: true, slug: true } }).catch(() => null)
+      : null;
 
-  if (id) {
-    await prisma.solution.delete({ where: { id } }).catch(() => null);
-  } else if (slug) {
-    await prisma.solution.delete({ where: { slug } }).catch(() => null);
-  }
+  if (!record) return;
 
-  revalidateSite([currentSlug ? `/cozumler/${currentSlug}` : null]);
+  await prisma.solution.delete({ where: { id: record.id } });
+
+  revalidateSite([`/cozumler/${record.slug}`]);
+
+  const { redirect } = await import("next/navigation");
+  redirect("/admin/services");
 }
 
 export async function saveProjectAction(formData: FormData) {
@@ -409,21 +407,20 @@ export async function deleteProjectAction(formData: FormData) {
   const id = optionalValue(formData, "id");
   const slug = optionalValue(formData, "slug");
 
-  const currentSlug = await findRecordSlug(
-    () =>
-      id
-        ? prisma.project.findUnique({ where: { id }, select: { slug: true } })
-        : prisma.project.findUnique({ where: { slug: slug ?? "" }, select: { slug: true } }),
-    slug
-  );
+  const record = id
+    ? await prisma.project.findUnique({ where: { id }, select: { id: true, slug: true } }).catch(() => null)
+    : slug
+      ? await prisma.project.findUnique({ where: { slug }, select: { id: true, slug: true } }).catch(() => null)
+      : null;
 
-  if (id) {
-    await prisma.project.delete({ where: { id } }).catch(() => null);
-  } else if (slug) {
-    await prisma.project.delete({ where: { slug } }).catch(() => null);
-  }
+  if (!record) return;
 
-  revalidateSite([currentSlug ? `/islerimiz/${currentSlug}` : null]);
+  await prisma.project.delete({ where: { id: record.id } });
+
+  revalidateSite([`/islerimiz/${record.slug}`]);
+
+  const { redirect } = await import("next/navigation");
+  redirect("/admin/projects");
 }
 
 export async function saveTemplateAction(formData: FormData) {
@@ -474,21 +471,24 @@ export async function deleteTemplateAction(formData: FormData) {
   const id = optionalValue(formData, "id");
   const slug = optionalValue(formData, "slug");
 
-  const currentSlug = await findRecordSlug(
-    () =>
-      id
-        ? prisma.template.findUnique({ where: { id }, select: { slug: true } })
-        : prisma.template.findUnique({ where: { slug: slug ?? "" }, select: { slug: true } }),
-    slug
-  );
+  // Find the record first to get the slug for revalidation
+  const record = id
+    ? await prisma.template.findUnique({ where: { id }, select: { id: true, slug: true } }).catch(() => null)
+    : slug
+      ? await prisma.template.findUnique({ where: { slug }, select: { id: true, slug: true } }).catch(() => null)
+      : null;
 
-  if (id) {
-    await prisma.template.delete({ where: { id } }).catch(() => null);
-  } else if (slug) {
-    await prisma.template.delete({ where: { slug } }).catch(() => null);
+  // If record not found in DB (e.g. fallback/static template), nothing to delete
+  if (!record) {
+    return;
   }
 
-  revalidateSite([currentSlug ? `/sablonlar/${currentSlug}` : null]);
+  await prisma.template.delete({ where: { id: record.id } });
+
+  revalidateSite([`/sablonlar/${record.slug}`]);
+
+  const { redirect } = await import("next/navigation");
+  redirect("/admin/templates");
 }
 
 export async function saveBlogPostAction(formData: FormData) {
@@ -549,21 +549,20 @@ export async function deleteBlogPostAction(formData: FormData) {
   const id = optionalValue(formData, "id");
   const slug = optionalValue(formData, "slug");
 
-  const currentSlug = await findRecordSlug(
-    () =>
-      id
-        ? prisma.blogPost.findUnique({ where: { id }, select: { slug: true } })
-        : prisma.blogPost.findUnique({ where: { slug: slug ?? "" }, select: { slug: true } }),
-    slug
-  );
+  const record = id
+    ? await prisma.blogPost.findUnique({ where: { id }, select: { id: true, slug: true } }).catch(() => null)
+    : slug
+      ? await prisma.blogPost.findUnique({ where: { slug }, select: { id: true, slug: true } }).catch(() => null)
+      : null;
 
-  if (id) {
-    await prisma.blogPost.delete({ where: { id } }).catch(() => null);
-  } else if (slug) {
-    await prisma.blogPost.delete({ where: { slug } }).catch(() => null);
-  }
+  if (!record) return;
 
-  revalidateSite([currentSlug ? `/blog/${currentSlug}` : null]);
+  await prisma.blogPost.delete({ where: { id: record.id } });
+
+  revalidateSite([`/blog/${record.slug}`]);
+
+  const { redirect } = await import("next/navigation");
+  redirect("/admin/blog");
 }
 
 export async function updateLeadStatusAction(formData: FormData) {
