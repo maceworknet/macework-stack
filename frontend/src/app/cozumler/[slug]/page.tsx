@@ -55,7 +55,7 @@ export default async function SolutionDetailPage({ params }: { params: Promise<{
                 <div className="space-y-6">
                   <h2 className="flex items-center gap-3 text-2xl font-bold tracking-tight">
                     <span className="h-7 w-1.5 rounded-full bg-macework" />
-                    Hizmet Hakkinda
+                    Hizmet Hakkında
                   </h2>
                   <RichContent
                     content={solution.description}
