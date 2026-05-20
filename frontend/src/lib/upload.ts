@@ -22,6 +22,19 @@ function safeExtension(fileName: string) {
   return ext || ".bin";
 }
 
+/**
+ * Yüklenen dosyaların kaydedileceği klasör.
+ * public/ dışında tutulur — Next.js production'da public/'a runtime'da
+ * eklenen dosyaları static serve etmez. Bunun yerine /api/uploads/[filename]
+ * route'u üzerinden dinamik olarak sunulur.
+ */
+export function getUploadDir() {
+  return (
+    process.env.UPLOAD_DIR ||
+    path.join(process.cwd(), "uploads")
+  );
+}
+
 export async function saveUploadedFile(file: File) {
   if (!file || file.size === 0) {
     throw new Error("Empty file");
@@ -35,7 +48,7 @@ export async function saveUploadedFile(file: File) {
     throw new Error("Unsupported file type");
   }
 
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
+  const uploadDir = getUploadDir();
   await mkdir(uploadDir, { recursive: true });
 
   const filename = `${randomUUID()}${safeExtension(file.name)}`;
@@ -47,7 +60,7 @@ export async function saveUploadedFile(file: File) {
   return {
     filename,
     originalName: file.name,
-    url: `/uploads/${filename}`,
+    url: `/api/uploads/${filename}`,
     mimeType: file.type,
     size: file.size,
   };

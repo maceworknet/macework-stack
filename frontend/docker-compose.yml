@@ -10,7 +10,7 @@ services:
     volumes:
       # Yüklenen medya dosyaları kalıcı volume'da saklanır.
       # Container yeniden başlasa veya yeni image deploy edilse bile dosyalar kaybolmaz.
-      - uploads_data:/app/public/uploads
+      - uploads_data:/app/uploads
     restart: unless-stopped
 
 volumes:

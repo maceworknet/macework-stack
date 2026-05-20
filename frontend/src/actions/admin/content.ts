@@ -976,8 +976,17 @@ export async function deleteMediaAction(formData: FormData) {
 
   await prisma.mediaFile.delete({ where: { id } }).catch(() => null);
 
-  if (url.startsWith("/uploads/")) {
-    const target = path.join(process.cwd(), "public", url);
+  // Hem yeni (/api/uploads/) hem eski (/uploads/) URL formatını destekle
+  const filename =
+    url.startsWith("/api/uploads/")
+      ? url.replace("/api/uploads/", "")
+      : url.startsWith("/uploads/")
+        ? url.replace("/uploads/", "")
+        : null;
+
+  if (filename) {
+    const { getUploadDir } = await import("@/lib/upload");
+    const target = path.join(getUploadDir(), path.basename(filename));
     await unlink(target).catch(() => null);
   }
 
