@@ -24,6 +24,11 @@ ENV NODE_ENV=production
 
 COPY --from=builder /app ./
 
+# Upload klasörünü oluştur — Coolify/Docker'da kalıcı volume olarak mount edilecek
+RUN mkdir -p /app/public/uploads
+
+VOLUME ["/app/public/uploads"]
+
 EXPOSE 3000
 
 CMD ["sh", "-c", "npx prisma migrate deploy && npm start"]
