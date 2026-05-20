@@ -1,8 +1,9 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import type { LucideIcon } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export type AdminFormTab = {
   id: string;
@@ -20,67 +21,59 @@ export function AdminFormTabs({
   defaultTabId?: string;
 }) {
   const [activeTabId, setActiveTabId] = useState(defaultTabId ?? tabs[0]?.id ?? "");
-
-  const activeTab = useMemo(
-    () => tabs.find((tab) => tab.id === activeTabId) ?? tabs[0],
-    [activeTabId, tabs]
-  );
+  const activeTab = tabs.find((tab) => tab.id === activeTabId) ?? tabs[0];
 
   return (
-    <div
+    <Tabs
+      value={activeTabId}
+      onValueChange={setActiveTabId}
       className="space-y-6"
+      // Switch to the tab containing the invalid field on validation
       onInvalidCapture={(event) => {
         const target = event.target as HTMLElement | null;
-        const panel = target?.closest<HTMLElement>("[data-tab-panel]");
-        const tabId = panel?.dataset.tabPanel;
-
-        if (tabId) {
-          setActiveTabId(tabId);
-        }
+        const panel = target?.closest<HTMLElement>("[data-radix-tabs-content]");
+        const tabId = panel?.getAttribute("data-value");
+        if (tabId) setActiveTabId(tabId);
       }}
     >
-      <div className="space-y-4 border-b border-border/70 pb-4">
-        <div className="flex flex-wrap gap-2">
+      <div className="space-y-3 border-b border-border/70 pb-4">
+        <TabsList className="h-auto flex-wrap gap-1.5 rounded-lg bg-muted p-1">
           {tabs.map((tab) => {
             const Icon = tab.icon;
-            const isActive = activeTab?.id === tab.id;
-
             return (
-              <button
+              <TabsTrigger
                 key={tab.id}
-                type="button"
-                onClick={() => setActiveTabId(tab.id)}
-                className={`inline-flex h-10 items-center gap-2 rounded-md border px-4 text-sm font-bold transition-colors ${
-                  isActive
-                    ? "border-macework bg-macework text-white"
-                    : "border-border bg-background text-muted-foreground hover:bg-muted hover:text-foreground"
-                }`}
+                value={tab.id}
+                className="inline-flex h-9 items-center gap-2 rounded-md px-4 text-sm font-semibold transition-colors data-[state=active]:bg-macework data-[state=active]:text-white data-[state=active]:shadow-sm"
               >
                 <Icon className="h-4 w-4" />
                 {tab.label}
-              </button>
+              </TabsTrigger>
             );
           })}
-        </div>
+        </TabsList>
 
-        <div className="space-y-1">
-          <p className="text-sm font-bold text-foreground">{activeTab?.label}</p>
-          <p className="text-sm leading-relaxed text-muted-foreground">{activeTab?.description}</p>
-        </div>
+        {activeTab && (
+          <div className="space-y-0.5 px-1">
+            <p className="text-sm font-bold text-foreground">{activeTab.label}</p>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              {activeTab.description}
+            </p>
+          </div>
+        )}
       </div>
 
       <div className="space-y-8">
         {tabs.map((tab) => (
-          <section
+          <TabsContent
             key={tab.id}
-            data-tab-panel={tab.id}
-            aria-hidden={activeTab?.id !== tab.id}
-            className={activeTab?.id === tab.id ? "block" : "sr-only"}
+            value={tab.id}
+            className="mt-0 focus-visible:outline-none"
           >
             {tab.content}
-          </section>
+          </TabsContent>
         ))}
       </div>
-    </div>
+    </Tabs>
   );
 }

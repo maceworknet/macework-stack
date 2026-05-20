@@ -12,6 +12,15 @@ import {
 } from "react";
 import { useFormStatus } from "react-dom";
 import { AlertTriangle, CheckCircle2, Info, Loader2, X, XCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
 type ToastType = "success" | "error" | "info" | "warning";
@@ -43,7 +52,6 @@ function serializeForm(form: HTMLFormElement) {
       if (typeof File !== "undefined" && entry instanceof File) {
         return [key, `${entry.name}:${entry.size}:${entry.lastModified}`];
       }
-
       return [key, String(entry)];
     })
   );
@@ -56,11 +64,30 @@ function toastIcon(type: ToastType) {
   return Info;
 }
 
-function toastClassName(type: ToastType) {
-  if (type === "success") return "border-emerald-200 bg-emerald-50 text-emerald-900";
-  if (type === "error") return "border-red-200 bg-red-50 text-red-900";
-  if (type === "warning") return "border-amber-200 bg-amber-50 text-amber-950";
-  return "border-border bg-background text-foreground";
+function toastStyle(type: ToastType): { bar: string; icon: string; container: string } {
+  if (type === "success")
+    return {
+      bar: "bg-emerald-500",
+      icon: "text-emerald-600",
+      container: "border-emerald-200 bg-emerald-50 text-emerald-900",
+    };
+  if (type === "error")
+    return {
+      bar: "bg-destructive",
+      icon: "text-destructive",
+      container: "border-red-200 bg-red-50 text-red-900",
+    };
+  if (type === "warning")
+    return {
+      bar: "bg-amber-500",
+      icon: "text-amber-600",
+      container: "border-amber-200 bg-amber-50 text-amber-950",
+    };
+  return {
+    bar: "bg-primary",
+    icon: "text-muted-foreground",
+    container: "border-border bg-background text-foreground",
+  };
 }
 
 export function AdminFeedbackProvider({ children }: { children: ReactNode }) {
@@ -73,24 +100,16 @@ export function AdminFeedbackProvider({ children }: { children: ReactNode }) {
       clearTimeout(timer);
       timersRef.current.delete(id);
     }
-
     setToasts((current) => current.filter((toast) => toast.id !== id));
   }, []);
 
   const notify = useCallback(
     (toast: ToastInput) => {
       const id = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-      const item: ToastItem = {
-        ...toast,
-        id,
-        type: toast.type ?? "info",
-      };
-
+      const item: ToastItem = { ...toast, id, type: toast.type ?? "info" };
       setToasts((current) => [item, ...current].slice(0, 4));
-
       const timer = setTimeout(() => dismiss(id), toast.duration ?? 4200);
       timersRef.current.set(id, timer);
-
       return id;
     },
     [dismiss]
@@ -109,25 +128,29 @@ export function AdminFeedbackProvider({ children }: { children: ReactNode }) {
   return (
     <AdminFeedbackContext.Provider value={value}>
       {children}
+      {/* Toast stack */}
       <div className="fixed right-4 top-4 z-[80] flex w-[min(24rem,calc(100vw-2rem))] flex-col gap-3">
         {toasts.map((toast) => {
           const Icon = toastIcon(toast.type);
+          const style = toastStyle(toast.type);
 
           return (
             <div
               key={toast.id}
               role="status"
               className={cn(
-                "rounded-lg border p-4 shadow-lg backdrop-blur",
-                toastClassName(toast.type)
+                "relative overflow-hidden rounded-lg border shadow-lg backdrop-blur",
+                style.container
               )}
             >
-              <div className="flex items-start gap-3">
-                <Icon className="mt-0.5 h-5 w-5 shrink-0" />
+              {/* Progress bar */}
+              <div className={cn("absolute left-0 top-0 h-0.5 w-full", style.bar)} />
+              <div className="flex items-start gap-3 p-4">
+                <Icon className={cn("mt-0.5 h-5 w-5 shrink-0", style.icon)} />
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-black">{toast.title}</p>
+                  <p className="text-sm font-bold">{toast.title}</p>
                   {toast.description ? (
-                    <p className="mt-1 text-xs font-medium leading-relaxed opacity-80">
+                    <p className="mt-1 text-xs leading-relaxed opacity-80">
                       {toast.description}
                     </p>
                   ) : null}
@@ -135,10 +158,10 @@ export function AdminFeedbackProvider({ children }: { children: ReactNode }) {
                 <button
                   type="button"
                   onClick={() => dismiss(toast.id)}
-                  className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md transition-colors hover:bg-black/5"
+                  className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md transition-colors hover:bg-black/10"
                   title="Bildirimi kapat"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="h-3.5 w-3.5" />
                 </button>
               </div>
             </div>
@@ -151,15 +174,16 @@ export function AdminFeedbackProvider({ children }: { children: ReactNode }) {
 
 export function useAdminToast() {
   const context = useContext(AdminFeedbackContext);
-
   if (!context) {
     throw new Error("useAdminToast must be used inside AdminFeedbackProvider");
   }
-
   return context;
 }
 
-export function useUnsavedChangesWarning(enabled: boolean, message = "Kaydedilmemiş değişiklikler var.") {
+export function useUnsavedChangesWarning(
+  enabled: boolean,
+  message = "Kaydedilmemiş değişiklikler var."
+) {
   useEffect(() => {
     if (!enabled) return;
 
@@ -174,7 +198,11 @@ export function useUnsavedChangesWarning(enabled: boolean, message = "Kaydedilme
   }, [enabled, message]);
 }
 
-function ActionFormStatusBridge({ onPendingChange }: { onPendingChange: (pending: boolean) => void }) {
+function ActionFormStatusBridge({
+  onPendingChange,
+}: {
+  onPendingChange: (pending: boolean) => void;
+}) {
   const { pending } = useFormStatus();
 
   useEffect(() => {
@@ -236,12 +264,7 @@ export function AdminActionForm({
         updateSnapshot();
         setDirty(false);
       }
-
-      notify({
-        type: "success",
-        title: successMessage,
-        description: successDescription,
-      });
+      notify({ type: "success", title: successMessage, description: successDescription });
     }
 
     wasPendingRef.current = false;
@@ -282,12 +305,9 @@ export function AdminSubmitButton({
   const { pending } = useFormStatus();
 
   return (
-    <button
+    <Button
       disabled={pending}
-      className={cn(
-        "inline-flex h-10 items-center justify-center gap-2 rounded-md bg-macework px-5 text-sm font-black text-white transition-colors hover:bg-macework-hover disabled:cursor-not-allowed disabled:opacity-60",
-        className
-      )}
+      className={cn("bg-macework text-white hover:bg-macework-hover", className)}
     >
       {pending ? (
         <>
@@ -297,7 +317,7 @@ export function AdminSubmitButton({
       ) : (
         children
       )}
-    </button>
+    </Button>
   );
 }
 
@@ -335,7 +355,6 @@ export function ConfirmSubmitButton({
 
   function handleClick(event: MouseEvent<HTMLButtonElement>) {
     if (confirmedRef.current) return;
-
     event.preventDefault();
     setOpen(true);
   }
@@ -343,7 +362,6 @@ export function ConfirmSubmitButton({
   function handleConfirm() {
     confirmedRef.current = true;
     setOpen(false);
-
     window.requestAnimationFrame(() => {
       buttonRef.current?.click();
       window.setTimeout(() => {
@@ -364,7 +382,7 @@ export function ConfirmSubmitButton({
         disabled={pending}
         onClick={handleClick}
         className={cn(
-          "inline-flex h-10 items-center justify-center gap-2 rounded-md border border-red-200 bg-background px-4 text-sm font-black text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60",
+          "inline-flex h-10 items-center justify-center gap-2 rounded-md border border-red-200 bg-background px-4 text-sm font-bold text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60",
           className
         )}
       >
@@ -378,47 +396,25 @@ export function ConfirmSubmitButton({
         )}
       </button>
 
-      {open ? (
-        <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/45 px-4">
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="admin-confirm-title"
-            className="w-full max-w-md rounded-lg border border-border bg-background p-5 shadow-xl"
-          >
-            <div className="flex items-start gap-3">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-red-50 text-red-600">
-                <AlertTriangle className="h-5 w-5" />
-              </span>
-              <div>
-                <h2 id="admin-confirm-title" className="text-lg font-black">
-                  {title}
-                </h2>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {description}
-                </p>
-              </div>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <div className="mb-2 flex h-11 w-11 items-center justify-center rounded-full bg-red-50 text-red-600">
+              <AlertTriangle className="h-5 w-5" />
             </div>
-
-            <div className="mt-6 flex flex-wrap justify-end gap-2">
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                className="h-10 rounded-md border border-border bg-background px-4 text-sm font-black transition-colors hover:bg-muted"
-              >
-                {cancelLabel}
-              </button>
-              <button
-                type="button"
-                onClick={handleConfirm}
-                className="h-10 rounded-md bg-red-600 px-4 text-sm font-black text-white transition-colors hover:bg-red-700"
-              >
-                {confirmLabel}
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
+            <DialogTitle>{title}</DialogTitle>
+            <DialogDescription>{description}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-2">
+            <Button variant="outline" onClick={() => setOpen(false)}>
+              {cancelLabel}
+            </Button>
+            <Button variant="destructive" onClick={handleConfirm}>
+              {confirmLabel}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

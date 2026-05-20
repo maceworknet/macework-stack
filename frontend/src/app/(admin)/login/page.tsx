@@ -1,7 +1,18 @@
 import { redirect } from "next/navigation";
 import { loginAction } from "@/actions/auth/login";
 import { getCurrentUser } from "@/lib/auth";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertTriangle, LogIn } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -17,44 +28,64 @@ export default async function LoginPage({
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-muted/30 px-4 py-16">
-      <div className="w-full max-w-md rounded-xl border border-border bg-card p-8 shadow-sm">
-        <div className="mb-8">
-          <p className="text-sm font-bold text-macework">Macework Admin</p>
-          <h1 className="mt-2 text-3xl font-black tracking-tight">Giriş yap</h1>
-          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            Local CMS paneline erişmek için admin hesabını kullanın.
-          </p>
+      <div className="w-full max-w-md">
+        {/* Brand */}
+        <div className="mb-8 text-center">
+          <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-macework/10 text-2xl font-black text-macework">
+            M
+          </div>
+          <p className="mt-3 text-sm font-bold text-muted-foreground">Macework Admin</p>
         </div>
 
-        {params.error ? (
-          <div className="mb-5 rounded-md border border-macework/30 bg-macework/10 px-4 py-3 text-sm font-bold text-macework">
-            E-posta veya şifre hatalı.
-          </div>
-        ) : null}
+        <Card className="shadow-md">
+          <CardHeader className="space-y-1 pb-4">
+            <CardTitle className="text-2xl font-black tracking-tight">Giriş yap</CardTitle>
+            <CardDescription>
+              Local CMS paneline erişmek için admin hesabını kullanın.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {params.error ? (
+              <Alert variant="destructive" className="mb-5">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertDescription>E-posta veya şifre hatalı.</AlertDescription>
+              </Alert>
+            ) : null}
 
-        <form action={loginAction} className="space-y-5">
-          <div className="space-y-2">
-            <label htmlFor="email" className="text-sm font-bold">
-              E-posta
-            </label>
-            <Input id="email" name="email" type="email" required autoComplete="email" />
-          </div>
-          <div className="space-y-2">
-            <label htmlFor="password" className="text-sm font-bold">
-              Şifre
-            </label>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              required
-              autoComplete="current-password"
-            />
-          </div>
-          <button className="h-11 w-full rounded-md bg-macework text-sm font-black text-white transition-colors hover:bg-macework-hover">
-            Giriş yap
-          </button>
-        </form>
+            <form action={loginAction} className="space-y-5">
+              <div className="space-y-2">
+                <Label htmlFor="email">E-posta</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  autoComplete="email"
+                  placeholder="admin@sirket.com"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">Şifre</Label>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  required
+                  autoComplete="current-password"
+                  placeholder="••••••••"
+                />
+              </div>
+              <Button
+                type="submit"
+                className="w-full gap-2 bg-macework text-white hover:bg-macework-hover"
+                size="lg"
+              >
+                <LogIn className="h-4 w-4" />
+                Giriş yap
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </main>
   );

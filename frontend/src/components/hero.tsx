@@ -6,7 +6,7 @@ import { ArrowRight, MoveRight, ChevronRight } from "lucide-react";
 import { InfiniteGrid } from "./ui/the-infinite-grid";
 import { resolveMediaUrl } from "@/lib/media";
 import { motion } from "framer-motion";
-import { Button } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 
 const container = {
   hidden: { opacity: 0 },
@@ -67,19 +67,28 @@ export function Hero({ data }: { data: any }) {
             variants={item}
             className="flex flex-col sm:flex-row items-center gap-4"
           >
-            <Button asChild size="lg" className="h-12 px-8 rounded-full bg-macework hover:bg-macework-hover text-white shadow-[0_10px_30px_-10px_rgba(225,29,72,0.4)] transition-all hover:scale-[1.02] active:scale-[0.98]">
-              <Link href={data.hero_cta_primary_url || "#"}>
-                {data.hero_cta_primary_label || "İncele"}
-                <MoveRight className="ml-2 w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
-              </Link>
-            </Button>
+            <Link
+              href={data.hero_cta_primary_url || "#"}
+              className={buttonVariants({
+                size: "lg",
+                className: "h-12 px-8 rounded-full bg-macework hover:bg-macework-hover text-white shadow-[0_10px_30px_-10px_rgba(225,29,72,0.4)] transition-all hover:scale-[1.02] active:scale-[0.98]"
+              })}
+            >
+              {data.hero_cta_primary_label || "İncele"}
+              <MoveRight className="ml-2 w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
+            </Link>
             
-            <Button asChild variant="outline" size="lg" className="h-12 px-8 rounded-full border-border/50 backdrop-blur-sm bg-background/50 hover:bg-muted/50 transition-all hover:scale-[1.02] active:scale-[0.98]">
-              <Link href={data.hero_cta_secondary_url || "#"}>
-                {data.hero_cta_secondary_label || "Ürünler"}
-                <ArrowRight className="ml-2 w-4 h-4 text-muted-foreground" />
-              </Link>
-            </Button>
+            <Link
+              href={data.hero_cta_secondary_url || "#"}
+              className={buttonVariants({
+                variant: "outline",
+                size: "lg",
+                className: "h-12 px-8 rounded-full border-border/50 backdrop-blur-sm bg-background/50 hover:bg-muted/50 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              })}
+            >
+              {data.hero_cta_secondary_label || "Ürünler"}
+              <ArrowRight className="ml-2 w-4 h-4 text-muted-foreground" />
+            </Link>
           </motion.div>
 
           {/* Brands Slider */}

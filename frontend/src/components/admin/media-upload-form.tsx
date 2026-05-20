@@ -4,6 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Upload } from "lucide-react";
 import { useAdminToast } from "@/components/admin/admin-feedback";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export function MediaUploadForm() {
   const router = useRouter();
@@ -47,27 +50,47 @@ export function MediaUploadForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-lg border border-border bg-card p-6">
-      <label className="block text-sm font-bold" htmlFor="file">
-        Dosya yükle
-      </label>
-      <div className="mt-3 flex flex-col gap-3 sm:flex-row">
-        <input
-          id="file"
+    <form
+      onSubmit={handleSubmit}
+      className="rounded-xl border border-border bg-card p-6 shadow-sm"
+    >
+      <div className="space-y-1.5">
+        <Label htmlFor="upload-file" className="text-sm font-bold">
+          Dosya yükle
+        </Label>
+        <p className="text-xs text-muted-foreground">
+          JPEG, PNG, WebP, GIF, SVG, PDF — maks. 10 MB
+        </p>
+      </div>
+
+      <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+        <Input
+          id="upload-file"
           name="file"
           type="file"
           required
-          className="min-h-11 flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm"
+          accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml,application/pdf"
+          className="min-h-10 flex-1 cursor-pointer"
         />
-        <button
+        <Button
+          type="submit"
           disabled={status === "uploading"}
-          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-macework px-5 text-sm font-bold text-white transition-colors hover:bg-macework-hover disabled:opacity-60"
+          className="gap-2 bg-macework text-white hover:bg-macework-hover"
         >
           <Upload className="h-4 w-4" />
-          {status === "uploading" ? "Yükleniyor" : "Yükle"}
-        </button>
+          {status === "uploading" ? "Yükleniyor…" : "Yükle"}
+        </Button>
       </div>
-      {message ? <p className="mt-3 text-xs font-medium text-muted-foreground">{message}</p> : null}
+
+      {message ? (
+        <p
+          className={`mt-3 break-all text-xs font-medium ${
+            status === "error" ? "text-destructive" : "text-muted-foreground"
+          }`}
+        >
+          {message}
+        </p>
+      ) : null}
     </form>
   );
 }

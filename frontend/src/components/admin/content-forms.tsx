@@ -27,6 +27,12 @@ import {
 } from "@/components/admin/admin-feedback";
 import { MediaGalleryField, MediaPickerField } from "@/components/admin/media-picker-field";
 import { RichTextEditor } from "@/components/admin/rich-text-editor";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 
 type ServerAction = (formData: FormData) => Promise<void>;
 
@@ -190,16 +196,16 @@ function StickyFormActions({
         : "Güncel";
 
   return (
-    <div className="sticky bottom-4 z-30 rounded-lg border border-border bg-background/95 p-3 shadow-lg backdrop-blur">
+    <div className="sticky bottom-4 z-30 rounded-xl border border-border bg-background/95 px-4 py-3 shadow-lg backdrop-blur">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2 text-sm font-bold text-muted-foreground">
+        <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
           {pending ? (
             <Loader2 className="h-4 w-4 animate-spin text-macework" />
           ) : isSaved ? (
             <CheckCircle2 className="h-4 w-4 text-emerald-600" />
           ) : (
             <span
-              className={`h-2.5 w-2.5 rounded-full ${
+              className={`h-2 w-2 rounded-full ${
                 isDirty ? "bg-amber-500" : "bg-emerald-500"
               }`}
             />
@@ -215,80 +221,89 @@ function StickyFormActions({
                   href={links.previewHref}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex h-10 items-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-black text-foreground transition-colors hover:bg-muted"
+                  className={buttonVariants({ variant: "outline", size: "sm", className: "gap-2" })}
                 >
-                  <Eye className="h-4 w-4" />
-                  Önizle
+                  <Eye className="h-4 w-4" />Önizle
                 </a>
               ) : (
-                <button
+                <Button
                   type="button"
+                  variant="outline"
+                  size="sm"
                   disabled
                   title={links.previewDisabledReason}
-                  className="inline-flex h-10 cursor-not-allowed items-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-black text-muted-foreground opacity-60"
+                  className="gap-2"
                 >
-                  <Eye className="h-4 w-4" />
-                  Önizle
-                </button>
+                  <Eye className="h-4 w-4" />Önizle
+                </Button>
               )}
               {links.canOpenPublic ? (
                 <a
                   href={links.publicHref}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex h-10 items-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-black text-foreground transition-colors hover:bg-muted"
+                  className={buttonVariants({ variant: "outline", size: "sm", className: "gap-2" })}
                 >
-                  <ExternalLink className="h-4 w-4" />
-                  Canlı
+                  <ExternalLink className="h-4 w-4" />Canlı
                 </a>
               ) : (
-                <button
+                <Button
                   type="button"
+                  variant="outline"
+                  size="sm"
                   disabled
                   title={links.publicDisabledReason}
-                  className="inline-flex h-10 cursor-not-allowed items-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-black text-muted-foreground opacity-60"
+                  className="gap-2"
                 >
-                  <ExternalLink className="h-4 w-4" />
-                  Canlı
-                </button>
+                  <ExternalLink className="h-4 w-4" />Canlı
+                </Button>
               )}
             </>
           ) : null}
-          <button
+
+          <Button
             type="submit"
             name="publishIntent"
             value="draft"
             formNoValidate
+            variant="outline"
+            size="sm"
             disabled={pending}
-            className="inline-flex h-10 items-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-black text-foreground transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-60"
+            className="gap-2"
           >
             <FilePenLine className="h-4 w-4" />
-            {isDrafting ? "Kaydediliyor" : "Taslak"}
-          </button>
-          <button
+            {isDrafting ? "Kaydediliyor…" : "Taslak"}
+          </Button>
+
+          <Button
             type="submit"
             name="publishIntent"
             value="save"
+            size="sm"
             disabled={pending}
-            className="inline-flex h-10 items-center gap-2 rounded-md bg-macework px-4 text-sm font-black text-white transition-colors hover:bg-macework-hover disabled:cursor-not-allowed disabled:opacity-60"
+            className="gap-2 bg-macework text-white hover:bg-macework-hover"
           >
             {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-            {isSaving ? "Kaydediliyor" : submitLabel}
-          </button>
-          <button
+            {isSaving ? "Kaydediliyor…" : (submitLabel ?? "Kaydet")}
+          </Button>
+
+          <Button
             type="submit"
             name="publishIntent"
             value="publish"
+            size="sm"
             disabled={pending}
-            className="inline-flex h-10 items-center gap-2 rounded-md border border-emerald-200 bg-emerald-50 px-4 text-sm font-black text-emerald-700 transition-colors hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-60"
+            className="gap-2 border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+            variant="outline"
           >
             {isPublishing ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
               <Send className="h-4 w-4" />
             )}
-            {isPublishing ? "Yayınlanıyor" : "Yayınla"}
-          </button>
+            {isPublishing ? "Yayınlanıyor…" : "Yayınla"}
+          </Button>
+
           {canDelete && deleteAction ? (
             <ConfirmSubmitButton
               name="formIntent"
@@ -299,7 +314,6 @@ function StickyFormActions({
               description="Bu kayıt silindikten sonra listelerden ve public sayfalardan kaldırılır. Bu işlem geri alınamaz."
               confirmLabel="Sil"
               pendingChildren="Siliniyor"
-              className="inline-flex h-10 items-center gap-2 rounded-md border border-red-200 bg-background px-4 text-sm font-black text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
             >
               <Trash2 className="h-4 w-4" />
               Sil
@@ -610,9 +624,9 @@ function FormField({
   fullWidth?: boolean;
 }) {
   return (
-    <label className={`space-y-1.5 ${fullWidth ? "md:col-span-2" : ""}`}>
-      <span className="text-xs font-bold text-muted-foreground">{label}</span>
-      <input
+    <div className={`space-y-1.5 ${fullWidth ? "md:col-span-2" : ""}`}>
+      <Label className="text-xs font-bold text-muted-foreground">{label}</Label>
+      <Input
         type={type}
         min={min}
         step={step}
@@ -620,12 +634,12 @@ function FormField({
         defaultValue={defaultValue ?? ""}
         placeholder={placeholder}
         required={required}
-        className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm outline-none focus:border-macework"
+        className="focus-visible:ring-macework/30"
       />
       {helperText ? (
         <span className="block text-xs leading-relaxed text-muted-foreground">{helperText}</span>
       ) : null}
-    </label>
+    </div>
   );
 }
 
@@ -649,20 +663,20 @@ function TextAreaField({
   helperText?: string;
 }) {
   return (
-    <label className={`space-y-1.5 ${fullWidth ? "md:col-span-2" : ""}`}>
-      <span className="text-xs font-bold text-muted-foreground">{label}</span>
-      <textarea
+    <div className={`space-y-1.5 ${fullWidth ? "md:col-span-2" : ""}`}>
+      <Label className="text-xs font-bold text-muted-foreground">{label}</Label>
+      <Textarea
         name={name}
         defaultValue={defaultValue ?? ""}
         placeholder={placeholder}
         required={required}
         rows={rows}
-        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus:border-macework"
+        className="focus-visible:ring-macework/30"
       />
       {helperText ? (
         <span className="block text-xs leading-relaxed text-muted-foreground">{helperText}</span>
       ) : null}
-    </label>
+    </div>
   );
 }
 

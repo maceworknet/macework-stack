@@ -9,7 +9,7 @@ import { MobileNav } from "./mobile-nav";
 import { ArrowRight, Menu } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 
 export function Header({
   settings,
@@ -111,12 +111,16 @@ export function Header({
                 {/* Actions */}
                 <div className="flex items-center gap-2 flex-1 lg:flex-none justify-end">
                   <ModeToggle />
-                  <Button asChild size="sm" className="hidden md:flex rounded-full px-5 text-sm">
-                    <Link href={cta.href}>
-                      {cta.label}
-                      <ArrowRight className="ml-2 w-4 h-4" />
-                    </Link>
-                  </Button>
+                  <Link
+                    href={cta.href}
+                    className={buttonVariants({
+                      size: "sm",
+                      className: "hidden md:flex rounded-full px-5 text-sm"
+                    })}
+                  >
+                    {cta.label}
+                    <ArrowRight className="ml-2 w-4 h-4" />
+                  </Link>
 
                   {/* Mobile Nav Button */}
                   <div className="lg:hidden">

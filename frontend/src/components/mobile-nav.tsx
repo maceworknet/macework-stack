@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowRight, ChevronRight, X } from "lucide-react";
 import { siteContent } from "../content/site-content";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 
 interface MobileNavProps {
   isOpen: boolean;
@@ -108,12 +108,16 @@ export function MobileNav({ isOpen, onOpenChange, settings, footerSettings }: Mo
                   </div>
                 </div>
 
-                <Button asChild className="w-full h-12 rounded-lg" onClick={() => onOpenChange(false)}>
-                  <Link href={cta.href}>
-                    {cta.label}
-                    <ArrowRight className="ml-2 w-4 h-4" />
-                  </Link>
-                </Button>
+                <Link
+                  href={cta.href}
+                  onClick={() => onOpenChange(false)}
+                  className={buttonVariants({
+                    className: "w-full h-12 rounded-lg gap-2"
+                  })}
+                >
+                  {cta.label}
+                  <ArrowRight className="ml-2 w-4 h-4" />
+                </Link>
               </div>
             </div>
 

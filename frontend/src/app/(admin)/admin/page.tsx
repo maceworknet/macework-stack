@@ -25,6 +25,15 @@ import {
   getTemplates,
 } from "@/lib/cms";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 type DashboardContentItem = {
   id: string;
@@ -167,12 +176,12 @@ export default async function AdminDashboardPage() {
 
       <AdminActionForm
         action={seedDefaultContentAction}
-        className="mb-8 rounded-lg border border-border bg-card p-5"
+        className="mb-8 rounded-xl border border-border bg-card p-5 shadow-sm"
         successMessage="Başlangıç içerikleri veritabanına aktarıldı."
       >
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h2 className="font-black">Başlangıç içeriklerini aktar</h2>
+            <h2 className="font-bold">Başlangıç içeriklerini aktar</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Mevcut statik ürün, çözüm, proje, blog ve şablon içeriklerini MySQL&apos;e kaydeder.
             </p>
@@ -183,17 +192,18 @@ export default async function AdminDashboardPage() {
         </div>
       </AdminActionForm>
 
+      {/* Stat cards */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <Link
           href="/admin/messages?status=NEW"
-          className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-6 transition-colors hover:border-amber-500/50"
+          className="group relative overflow-hidden rounded-xl border border-amber-500/30 bg-amber-500/10 p-6 transition-all hover:border-amber-500/50 hover:shadow-md"
         >
           <div className="flex items-center justify-between gap-4">
-            <p className="text-sm font-black text-amber-800">Yanıt bekleyen mesaj</p>
+            <p className="text-sm font-bold text-amber-800">Yanıt bekleyen mesaj</p>
             <BellRing className="h-5 w-5 text-amber-700" />
           </div>
           <p className="mt-3 text-4xl font-black tracking-tight">{pendingLeads.length}</p>
-          <p className="mt-2 text-xs font-bold text-amber-800/80">
+          <p className="mt-2 text-xs font-semibold text-amber-800/80">
             Yeni durumundaki talepleri aç
           </p>
         </Link>
@@ -202,30 +212,31 @@ export default async function AdminDashboardPage() {
           <Link
             key={card.label}
             href={card.href}
-            className="rounded-lg border border-border bg-card p-6 transition-colors hover:border-macework/50"
+            className="group rounded-xl border border-border bg-card p-6 transition-all hover:border-macework/40 hover:shadow-md"
           >
             <div className="flex items-center justify-between gap-4">
-              <p className="text-sm font-bold text-muted-foreground">{card.label}</p>
-              <ArrowRight className="h-4 w-4 text-muted-foreground" />
+              <p className="text-sm font-semibold text-muted-foreground">{card.label}</p>
+              <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
             </div>
             <p className="mt-3 text-4xl font-black tracking-tight">{card.value}</p>
           </Link>
         ))}
       </div>
 
+      {/* Content + Quick Actions */}
       <div className="mt-10 grid gap-6 xl:grid-cols-[minmax(0,1.25fr)_minmax(20rem,0.75fr)]">
-        <section className="rounded-lg border border-border bg-card">
-          <div className="flex items-center justify-between gap-4 border-b border-border px-5 py-4">
+        <Card className="overflow-hidden shadow-sm">
+          <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0 border-b border-border pb-4">
             <div>
-              <h2 className="text-lg font-black">Son güncellenen içerikler</h2>
-              <p className="mt-1 text-sm text-muted-foreground">
+              <CardTitle className="text-lg font-black">Son güncellenen içerikler</CardTitle>
+              <CardDescription className="mt-1">
                 İçerik tarafında en son dokunulan kayıtlar.
-              </p>
+              </CardDescription>
             </div>
-            <Clock3 className="h-5 w-5 text-macework" />
-          </div>
+            <Clock3 className="h-5 w-5 shrink-0 text-macework" />
+          </CardHeader>
 
-          <div className="divide-y divide-border">
+          <CardContent className="divide-y divide-border p-0">
             {latestContent.map((item) => (
               <Link
                 key={`${item.type}-${item.id}`}
@@ -234,23 +245,26 @@ export default async function AdminDashboardPage() {
               >
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="rounded-full bg-macework/10 px-2.5 py-1 text-xs font-black text-macework">
+                    <Badge
+                      variant="secondary"
+                      className="bg-macework/10 text-macework hover:bg-macework/20"
+                    >
                       {item.type}
-                    </span>
-                    <span
+                    </Badge>
+                    <Badge
+                      variant="outline"
                       className={cn(
-                        "rounded-full px-2.5 py-1 text-xs font-bold",
                         item.published
-                          ? "bg-emerald-500/10 text-emerald-700"
-                          : "bg-muted text-muted-foreground"
+                          ? "border-emerald-200 bg-emerald-500/10 text-emerald-700"
+                          : "text-muted-foreground"
                       )}
                     >
                       {item.published ? "Yayında" : "Taslak"}
-                    </span>
+                    </Badge>
                   </div>
-                  <p className="mt-2 truncate font-black">{item.title}</p>
+                  <p className="mt-2 truncate font-bold">{item.title}</p>
                 </div>
-                <div className="flex items-center gap-2 text-sm font-bold text-muted-foreground md:justify-end">
+                <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground md:justify-end">
                   <Clock3 className="h-4 w-4" />
                   {formatDate(item.updatedAt)}
                 </div>
@@ -262,22 +276,21 @@ export default async function AdminDashboardPage() {
                 Henüz güncellenmiş içerik bulunamadı.
               </p>
             ) : null}
-          </div>
-        </section>
+          </CardContent>
+        </Card>
 
-        <section className="rounded-lg border border-border bg-card">
-          <div className="flex items-center justify-between gap-4 border-b border-border px-5 py-4">
+        <Card className="overflow-hidden shadow-sm">
+          <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0 border-b border-border pb-4">
             <div>
-              <h2 className="text-lg font-black">Hızlı ekle</h2>
-              <p className="mt-1 text-sm text-muted-foreground">Sık kullanılan oluşturma akışları.</p>
+              <CardTitle className="text-lg font-black">Hızlı ekle</CardTitle>
+              <CardDescription className="mt-1">Sık kullanılan oluşturma akışları.</CardDescription>
             </div>
-            <PlusCircle className="h-5 w-5 text-macework" />
-          </div>
+            <PlusCircle className="h-5 w-5 shrink-0 text-macework" />
+          </CardHeader>
 
-          <div className="grid divide-y divide-border">
+          <CardContent className="grid divide-y divide-border p-0">
             {quickActions.map((action) => {
               const Icon = action.icon;
-
               return (
                 <Link
                   key={action.href}
@@ -285,12 +298,12 @@ export default async function AdminDashboardPage() {
                   className="flex items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-muted/50"
                 >
                   <div className="flex min-w-0 items-center gap-3">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-macework/10 text-macework">
-                      <Icon className="h-5 w-5" />
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-macework/10 text-macework">
+                      <Icon className="h-4 w-4" />
                     </span>
                     <span className="min-w-0">
-                      <span className="block truncate text-sm font-black">{action.label}</span>
-                      <span className="mt-1 block truncate text-xs font-medium text-muted-foreground">
+                      <span className="block truncate text-sm font-bold">{action.label}</span>
+                      <span className="mt-0.5 block truncate text-xs text-muted-foreground">
                         {action.description}
                       </span>
                     </span>
@@ -299,43 +312,43 @@ export default async function AdminDashboardPage() {
                 </Link>
               );
             })}
-          </div>
-        </section>
+          </CardContent>
+        </Card>
       </div>
 
-      <section className="mt-6 rounded-lg border border-border bg-card">
-        <div className="flex items-center justify-between gap-4 border-b border-border px-5 py-4">
+      {/* Message tracking */}
+      <Card className="mt-6 overflow-hidden shadow-sm">
+        <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0 border-b border-border pb-4">
           <div>
-            <h2 className="text-lg font-black">Mesaj takibi</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <CardTitle className="text-lg font-black">Mesaj takibi</CardTitle>
+            <CardDescription className="mt-1">
               Öncelik yeni mesajlarda; yeni yoksa son gelen talepler gösterilir.
-            </p>
+            </CardDescription>
           </div>
-          <Link
-            href="/admin/messages"
-            className="inline-flex h-10 items-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-black transition-colors hover:bg-muted"
-          >
-            <Mail className="h-4 w-4" />
-            Tümünü gör
-          </Link>
-        </div>
+          <Button variant="outline" size="sm" className="shrink-0 gap-2">
+            <Link href="/admin/messages" className="inline-flex items-center gap-2">
+              <Mail className="h-4 w-4" />
+              Tümünü gör
+            </Link>
+          </Button>
+        </CardHeader>
 
-        <div className="grid gap-4 p-5 md:grid-cols-3">
+        <CardContent className="grid gap-4 p-5 md:grid-cols-3">
           {latestLeads.map((lead: any) => (
             <Link
               key={lead.id}
               href={`/admin/messages?id=${lead.id}`}
-              className="rounded-lg border border-border bg-background p-4 transition-colors hover:border-macework/50"
+              className="rounded-xl border border-border bg-background p-4 transition-all hover:border-macework/40 hover:shadow-sm"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="truncate font-black">{lead.name}</p>
+                  <p className="truncate font-bold">{lead.name}</p>
                   <p className="mt-1 truncate text-sm text-muted-foreground">{lead.email}</p>
                 </div>
                 {lead.status === "NEW" ? (
-                  <span className="shrink-0 rounded-full bg-amber-500/10 px-2.5 py-1 text-xs font-black text-amber-700">
+                  <Badge className="shrink-0 bg-amber-500/10 text-amber-700 hover:bg-amber-500/20">
                     Yeni
-                  </span>
+                  </Badge>
                 ) : null}
               </div>
               <p className="mt-4 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
@@ -345,13 +358,13 @@ export default async function AdminDashboardPage() {
           ))}
 
           {latestLeads.length === 0 ? (
-            <div className="col-span-full rounded-lg border border-dashed border-border p-8 text-center">
+            <div className="col-span-full rounded-xl border border-dashed border-border p-8 text-center">
               <Sparkles className="mx-auto h-8 w-8 text-muted-foreground" />
-              <p className="mt-3 text-sm font-bold text-muted-foreground">Henüz mesaj yok.</p>
+              <p className="mt-3 text-sm font-semibold text-muted-foreground">Henüz mesaj yok.</p>
             </div>
           ) : null}
-        </div>
-      </section>
+        </CardContent>
+      </Card>
     </>
   );
 }
