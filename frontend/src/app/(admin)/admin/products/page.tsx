@@ -13,6 +13,10 @@ import {
 } from "@/lib/admin-listing";
 import { getMediaFiles, getProducts, resolveMediaUrl } from "@/lib/cms";
 import { richTextToPlainText } from "@/lib/rich-text";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+
 
 const sortOptions = [
   { label: "Yeni - Eski", value: "latest" },
@@ -116,8 +120,8 @@ export default async function AdminProductsPage({
         activeFilters={activeFilters}
       />
 
-      <details className="mb-8 rounded-lg border border-border bg-card p-5" open>
-        <summary className="cursor-pointer text-lg font-black">Yeni ürün ekle</summary>
+      <details className="mb-8 rounded-lg border border-border bg-muted/20 p-5 transition-all duration-200 open:bg-muted/30" open>
+        <summary className="cursor-pointer text-lg font-bold tracking-tight text-foreground select-none">Yeni ürün ekle</summary>
         <div className="mt-5 border-t border-border pt-5">
           <ProductForm action={saveProductAction} submitLabel="Ürünü kaydet" mediaFiles={mediaFiles} />
         </div>
@@ -126,88 +130,102 @@ export default async function AdminProductsPage({
       {products.length ? (
         <div className="grid gap-4">
           {products.map((product: any) => (
-            <article key={product.id} className="rounded-lg border border-border bg-card p-5">
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div className="flex items-start gap-4">
-                  <div className="h-16 w-24 overflow-hidden rounded-lg border border-border bg-muted/40">
-                    <img
-                      src={resolveMediaUrl(product.cover_image?.url)}
-                      alt={product.title}
-                      className="h-full w-full object-cover"
-                    />
+            <Card key={product.id} className="overflow-hidden border-border bg-card shadow-sm transition-all hover:shadow-md">
+              <CardContent className="p-6">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div className="flex items-start gap-4">
+                    <div className="h-16 w-24 flex-shrink-0 overflow-hidden rounded-md border border-border bg-muted/40">
+                      <img
+                        src={resolveMediaUrl(product.cover_image?.url)}
+                        alt={product.title}
+                        className="h-full w-full object-cover transition-transform hover:scale-105 duration-300"
+                      />
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-bold tracking-tight text-foreground">{product.title}</h2>
+                      <p className="text-sm text-muted-foreground">/{product.slug}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h2 className="text-lg font-black">{product.title}</h2>
-                    <p className="text-sm text-muted-foreground">/{product.slug}</p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge className="bg-macework text-white hover:bg-macework/90">
+                      {product.tag ?? product.category ?? "Ürün"}
+                    </Badge>
+                    <Badge
+                      variant={product.published ? "default" : "secondary"}
+                      className={
+                        product.published
+                          ? "bg-emerald-500/10 text-emerald-700 border-emerald-500/20 hover:bg-emerald-500/15"
+                          : "bg-muted text-muted-foreground hover:bg-muted"
+                      }
+                    >
+                      {product.published ? "Yayında" : "Taslak"}
+                    </Badge>
                   </div>
                 </div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded-full bg-macework/10 px-3 py-1 text-xs font-bold text-macework">
-                    {product.tag ?? product.category ?? "Ürün"}
-                  </span>
-                  <span
-                    className={`rounded-full px-3 py-1 text-xs font-bold ${
-                      product.published
-                        ? "bg-emerald-500/10 text-emerald-700"
-                        : "bg-muted text-muted-foreground"
-                    }`}
-                  >
-                    {product.published ? "Yayında" : "Taslak"}
-                  </span>
-                </div>
-              </div>
-              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                {product.short_description ?? richTextToPlainText(product.description)}
-              </p>
-              <div className="mt-5 flex items-center gap-3">
-                <details className="flex-1 rounded-md border border-border bg-background p-4">
-                  <summary className="cursor-pointer text-sm font-black">Düzenle</summary>
-                  <div className="mt-4 border-t border-border pt-4">
-                    <ProductForm
-                      product={product}
-                      action={saveProductAction}
-                      submitLabel="Güncelle"
-                      mediaFiles={mediaFiles}
-                      deleteAction={deleteProductAction}
-                    />
+                <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                  {product.short_description ?? richTextToPlainText(product.description)}
+                </p>
+                <div className="mt-5 flex flex-wrap items-stretch gap-3">
+                  <details className="flex-1 rounded-md border border-border bg-muted/20 p-4 transition-all duration-200 open:bg-muted/30">
+                    <summary className="cursor-pointer text-sm font-bold text-foreground hover:text-primary transition-colors select-none">Düzenle</summary>
+                    <div className="mt-4 border-t border-border pt-4">
+                      <ProductForm
+                        product={product}
+                        action={saveProductAction}
+                        submitLabel="Güncelle"
+                        mediaFiles={mediaFiles}
+                        deleteAction={deleteProductAction}
+                      />
+                    </div>
+                  </details>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <Link
+                      href={`/admin/preview/products/${product.slug}`}
+                      target="_blank"
+                      className={buttonVariants({
+                        variant: "outline",
+                        className: "gap-2 h-full hover:bg-muted text-sm font-semibold"
+                      })}
+                    >
+                      <Eye className="h-4 w-4" />
+                      Önizle
+                    </Link>
+                    {product.published ? (
+                      <Link
+                        href={`/urunler/${product.slug}`}
+                        target="_blank"
+                        className={buttonVariants({
+                          variant: "outline",
+                          className: "gap-2 h-full hover:bg-muted text-sm font-semibold"
+                        })}
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        Canlı
+                      </Link>
+                    ) : (
+                      <span
+                        title="Taslaklar public sayfada görünmez; önizlemeyi kullanın."
+                        className={buttonVariants({
+                          variant: "outline",
+                          className: "gap-2 h-full cursor-not-allowed opacity-50 text-sm font-semibold"
+                        })}
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        Canlı
+                      </span>
+                    )}
                   </div>
-                </details>
-                <Link
-                  href={`/admin/preview/products/${product.slug}`}
-                  target="_blank"
-                  className="inline-flex h-10 items-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-black transition-colors hover:bg-muted"
-                >
-                  <Eye className="h-4 w-4" />
-                  Önizle
-                </Link>
-                {product.published ? (
-                  <Link
-                    href={`/urunler/${product.slug}`}
-                    target="_blank"
-                    className="inline-flex h-10 items-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-black transition-colors hover:bg-muted"
-                  >
-                    <ExternalLink className="h-4 w-4" />
-                    Canlı
-                  </Link>
-                ) : (
-                  <span
-                    title="Taslaklar public sayfada görünmez; önizlemeyi kullanın."
-                    className="inline-flex h-10 cursor-not-allowed items-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-black text-muted-foreground opacity-60"
-                  >
-                    <ExternalLink className="h-4 w-4" />
-                    Canlı
-                  </span>
-                )}
-              </div>
-            </article>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       ) : (
-        <div className="rounded-lg border border-dashed border-border bg-card p-8 text-center">
+        <Card className="border-dashed border-border bg-card p-8 text-center shadow-sm">
           <p className="text-sm font-medium text-muted-foreground">
             Bu filtrelerle eşleşen ürün bulunamadı.
           </p>
-        </div>
+        </Card>
       )}
     </>
   );

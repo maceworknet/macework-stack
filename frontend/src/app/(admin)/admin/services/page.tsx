@@ -11,6 +11,10 @@ import {
 } from "@/lib/admin-listing";
 import { getSolutions, resolveMediaUrl } from "@/lib/cms";
 import { richTextToPlainText } from "@/lib/rich-text";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+
 
 const sortOptions = [
   { label: "Yeni - Eski", value: "latest" },
@@ -113,7 +117,9 @@ export default async function AdminServicesPage({
       <div className="mb-8 flex justify-end">
         <Link
           href="/admin/services/new"
-          className="inline-flex h-10 items-center gap-2 rounded-md bg-macework px-4 text-sm font-black text-white transition-colors hover:bg-macework-hover"
+          className={buttonVariants({
+            className: "gap-2 bg-macework text-white hover:bg-macework/90 font-bold"
+          })}
         >
           <Plus className="h-4 w-4" />
           Yeni çözüm ekle
@@ -123,102 +129,119 @@ export default async function AdminServicesPage({
       {services.length ? (
         <div className="grid gap-4 md:grid-cols-2">
           {services.map((service: any) => (
-            <article key={service.id} className="rounded-lg border border-border bg-card p-5">
-              <div className="flex items-start gap-4">
-                <div className="h-16 w-16 overflow-hidden rounded-lg border border-border bg-muted/40">
-                  <img
-                    src={resolveMediaUrl(service.cover_image?.url)}
-                    alt={service.title}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <h2 className="text-lg font-black">{service.title}</h2>
-                      <p className="mt-1 text-sm text-muted-foreground">/{service.slug}</p>
+            <Card key={service.id} className="overflow-hidden border-border bg-card shadow-sm transition-all hover:shadow-md">
+              <CardContent className="p-6">
+                <div className="flex items-start gap-4">
+                  <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-border bg-muted/40">
+                    <img
+                      src={resolveMediaUrl(service.cover_image?.url)}
+                      alt={service.title}
+                      className="h-full w-full object-cover transition-transform hover:scale-105 duration-300"
+                    />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div>
+                        <h2 className="text-lg font-bold tracking-tight text-foreground">{service.title}</h2>
+                        <p className="mt-1 text-sm text-muted-foreground">/{service.slug}</p>
+                      </div>
+                      <Badge
+                        variant={service.published ? "default" : "secondary"}
+                        className={
+                          service.published
+                            ? "bg-emerald-500/10 text-emerald-700 border-emerald-500/20 hover:bg-emerald-500/15"
+                            : "bg-muted text-muted-foreground hover:bg-muted"
+                        }
+                      >
+                        {service.published ? "Yayında" : "Taslak"}
+                      </Badge>
                     </div>
-                    <span
-                      className={`rounded-full px-3 py-1 text-xs font-bold ${
-                        service.published
-                          ? "bg-emerald-500/10 text-emerald-700"
-                          : "bg-muted text-muted-foreground"
-                      }`}
+                    <p className="mt-4 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+                      {service.short_description ?? richTextToPlainText(service.description)}
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-5 flex flex-wrap items-stretch gap-3">
+                  <details className="min-w-[220px] flex-1 rounded-md border border-border bg-muted/20 p-4 transition-all duration-200 open:bg-muted/30">
+                    <summary className="cursor-pointer text-sm font-bold text-foreground hover:text-primary transition-colors select-none">
+                      <span className="inline-flex items-center gap-2">
+                        <Eye className="h-4 w-4" />
+                        Hızlı görüntüle
+                      </span>
+                    </summary>
+                    <div className="mt-4 grid gap-3 border-t border-border pt-4 text-sm text-muted-foreground md:grid-cols-3">
+                      <div>
+                        <span className="block text-xs font-semibold text-foreground">Kategori</span>
+                        {service.category ?? "Genel"}
+                      </div>
+                      <div>
+                        <span className="block text-xs font-semibold text-foreground">İkon</span>
+                        {service.icon ?? "Belirtilmedi"}
+                      </div>
+                      <div>
+                        <span className="block text-xs font-semibold text-foreground">Sıra</span>
+                        {service.sortOrder ?? 0}
+                      </div>
+                    </div>
+                  </details>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <Link
+                      href={`/admin/services/${encodeURIComponent(String(service.id ?? service.slug))}`}
+                      className={buttonVariants({
+                        variant: "outline",
+                        className: "gap-2 h-full hover:bg-muted text-sm font-semibold"
+                      })}
                     >
-                      {service.published ? "Yayında" : "Taslak"}
-                    </span>
-                  </div>
-                  <p className="mt-4 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
-                    {service.short_description ?? richTextToPlainText(service.description)}
-                  </p>
-                </div>
-              </div>
-              <div className="mt-5 flex flex-wrap items-start gap-3">
-                <details className="min-w-[220px] flex-1 rounded-md border border-border bg-background p-4">
-                  <summary className="cursor-pointer text-sm font-black">
-                    <span className="inline-flex items-center gap-2">
+                      <Pencil className="h-4 w-4" />
+                      Tam düzenle
+                    </Link>
+                    <Link
+                      href={`/admin/preview/solutions/${service.slug}`}
+                      target="_blank"
+                      className={buttonVariants({
+                        variant: "outline",
+                        className: "gap-2 h-full hover:bg-muted text-sm font-semibold"
+                      })}
+                    >
                       <Eye className="h-4 w-4" />
-                      Hızlı görüntüle
-                    </span>
-                  </summary>
-                  <div className="mt-4 grid gap-3 border-t border-border pt-4 text-sm text-muted-foreground md:grid-cols-3">
-                    <div>
-                      <span className="block text-xs font-black text-foreground">Kategori</span>
-                      {service.category ?? "Genel"}
-                    </div>
-                    <div>
-                      <span className="block text-xs font-black text-foreground">İkon</span>
-                      {service.icon ?? "Belirtilmedi"}
-                    </div>
-                    <div>
-                      <span className="block text-xs font-black text-foreground">Sıra</span>
-                      {service.sortOrder ?? 0}
-                    </div>
+                      Önizle
+                    </Link>
+                    {service.published ? (
+                      <Link
+                        href={`/cozumler/${service.slug}`}
+                        target="_blank"
+                        className={buttonVariants({
+                          variant: "outline",
+                          className: "gap-2 h-full hover:bg-muted text-sm font-semibold"
+                        })}
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        Canlı
+                      </Link>
+                    ) : (
+                      <span
+                        title="Taslaklar public sayfada görünmez; önizlemeyi kullanın."
+                        className={buttonVariants({
+                          variant: "outline",
+                          className: "gap-2 h-full cursor-not-allowed opacity-50 text-sm font-semibold"
+                        })}
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        Canlı
+                      </span>
+                    )}
                   </div>
-                </details>
-                <Link
-                  href={`/admin/services/${encodeURIComponent(String(service.id ?? service.slug))}`}
-                  className="inline-flex h-10 items-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-black transition-colors hover:bg-muted"
-                >
-                  <Pencil className="h-4 w-4" />
-                  Tam düzenle
-                </Link>
-                <Link
-                  href={`/admin/preview/solutions/${service.slug}`}
-                  target="_blank"
-                  className="inline-flex h-10 items-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-black transition-colors hover:bg-muted"
-                >
-                  <Eye className="h-4 w-4" />
-                  Önizle
-                </Link>
-                {service.published ? (
-                  <Link
-                    href={`/cozumler/${service.slug}`}
-                    target="_blank"
-                    className="inline-flex h-10 items-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-black transition-colors hover:bg-muted"
-                  >
-                    <ExternalLink className="h-4 w-4" />
-                    Canlı
-                  </Link>
-                ) : (
-                  <span
-                    title="Taslaklar public sayfada görünmez; önizlemeyi kullanın."
-                    className="inline-flex h-10 cursor-not-allowed items-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-black text-muted-foreground opacity-60"
-                  >
-                    <ExternalLink className="h-4 w-4" />
-                    Canlı
-                  </span>
-                )}
-              </div>
-            </article>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       ) : (
-        <div className="rounded-lg border border-dashed border-border bg-card p-8 text-center">
+        <Card className="border-dashed border-border bg-card p-8 text-center shadow-sm">
           <p className="text-sm font-medium text-muted-foreground">
             Bu filtrelerle eşleşen çözüm bulunamadı.
           </p>
-        </div>
+        </Card>
       )}
     </>
   );

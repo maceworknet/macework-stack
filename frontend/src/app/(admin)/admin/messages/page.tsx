@@ -21,6 +21,10 @@ import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { getLeads } from "@/lib/cms";
 import { cn } from "@/lib/utils";
 import type { RawSearchParams } from "@/lib/admin-listing";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+
 
 type LeadStatusValue = "NEW" | "READ" | "ARCHIVED";
 
@@ -36,19 +40,19 @@ const statusConfig: Record<
   NEW: {
     label: "Yeni",
     detailLabel: "Yeni mesaj",
-    className: "bg-amber-500/10 text-amber-700 ring-amber-500/20",
+    className: "bg-amber-500/10 text-amber-700 hover:bg-amber-500/15",
     icon: Inbox,
   },
   READ: {
     label: "Okundu",
     detailLabel: "Okundu",
-    className: "bg-emerald-500/10 text-emerald-700 ring-emerald-500/20",
+    className: "bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15",
     icon: CheckCircle2,
   },
   ARCHIVED: {
     label: "Arşiv",
     detailLabel: "Arşivlendi",
-    className: "bg-muted text-muted-foreground ring-border",
+    className: "bg-muted text-muted-foreground hover:bg-muted",
     icon: Archive,
   },
 };
@@ -113,16 +117,21 @@ function StatusBadge({ status }: { status: LeadStatusValue }) {
   const config = statusConfig[status];
   const Icon = config.icon;
 
+  let badgeVariant: "default" | "secondary" | "outline" = "outline";
+  if (status === "NEW") badgeVariant = "default";
+  else if (status === "READ") badgeVariant = "secondary";
+
   return (
-    <span
+    <Badge
+      variant={badgeVariant}
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-black ring-1",
+        "inline-flex items-center gap-1.5 font-bold border-none",
         config.className
       )}
     >
       <Icon className="h-3.5 w-3.5" />
       {config.label}
-    </span>
+    </Badge>
   );
 }
 
@@ -143,12 +152,10 @@ function StatusActionButton({
       <input type="hidden" name="status" value={status} />
       <AdminSubmitButton
         pendingChildren="Güncelleniyor"
-        className={cn(
-          "inline-flex h-10 items-center justify-center gap-2 rounded-md border px-4 text-sm font-black transition-colors",
-          variant === "primary"
-            ? "border-macework bg-macework text-white hover:bg-macework/90"
-            : "border-border bg-background hover:bg-muted"
-        )}
+        className={buttonVariants({
+          variant: variant === "primary" ? "default" : "outline",
+          className: cn("gap-2 text-sm font-semibold h-10 px-4", variant === "primary" && "bg-macework hover:bg-macework/90 text-white")
+        })}
       >
         {children}
       </AdminSubmitButton>
@@ -198,35 +205,37 @@ export default async function AdminMessagesPage({
             <Link
               key={filter.label}
               href={buildMessagesUrl(filter.value)}
-              className={cn(
-                "inline-flex h-10 items-center gap-2 rounded-md border px-3 text-sm font-black transition-colors",
-                isActive
-                  ? "border-macework bg-macework text-white"
-                  : "border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
-              )}
+              className={buttonVariants({
+                variant: isActive ? "default" : "outline",
+                className: cn(
+                  "gap-2 h-10 font-bold",
+                  isActive ? "bg-macework hover:bg-macework/90 text-white" : "bg-card text-muted-foreground hover:bg-muted"
+                )
+              })}
             >
               <Icon className="h-4 w-4" />
               <span>{filter.label}</span>
-              <span
+              <Badge
+                variant={isActive ? "secondary" : "outline"}
                 className={cn(
-                  "rounded-full px-2 py-0.5 text-[11px] font-black",
+                  "px-2 py-0.5 text-[11px] font-bold border-none",
                   isActive ? "bg-white/20 text-white" : "bg-muted text-muted-foreground"
                 )}
               >
                 {count}
-              </span>
+              </Badge>
             </Link>
           );
         })}
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-border bg-card">
+      <Card className="overflow-hidden border-border bg-card shadow-sm">
         <div className="grid min-h-[620px] lg:grid-cols-[minmax(20rem,25rem)_1fr]">
           <aside className="border-b border-border lg:border-b-0 lg:border-r">
-            <div className="flex h-14 items-center justify-between border-b border-border px-4">
+            <div className="flex h-14 items-center justify-between border-b border-border px-4 bg-muted/10">
               <div>
-                <p className="text-sm font-black">Gelen kutusu</p>
-                <p className="text-xs font-medium text-muted-foreground">
+                <p className="text-sm font-bold text-foreground">Gelen kutusu</p>
+                <p className="text-xs font-semibold text-muted-foreground">
                   {visibleLeads.length} mesaj gösteriliyor
                 </p>
               </div>
@@ -243,14 +252,14 @@ export default async function AdminMessagesPage({
                     key={lead.id}
                     href={buildMessagesUrl(activeStatus, lead.id)}
                     className={cn(
-                      "block border-b border-border px-4 py-4 text-left transition-colors last:border-0 hover:bg-muted/60",
+                      "block border-b border-border px-4 py-4 text-left transition-colors last:border-0 hover:bg-muted/40",
                       isSelected ? "bg-macework/10" : "bg-card",
                       status === "NEW" ? "font-bold" : "font-medium"
                     )}
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-black text-foreground">{lead.name}</p>
+                        <p className="truncate text-sm font-bold text-foreground">{lead.name}</p>
                         <p className="mt-1 truncate text-xs text-muted-foreground">{lead.email}</p>
                       </div>
                       <span className="shrink-0 text-xs font-bold text-muted-foreground">
@@ -287,19 +296,19 @@ export default async function AdminMessagesPage({
           <section className="min-w-0">
             {selectedLead ? (
               <div className="flex h-full flex-col">
-                <div className="border-b border-border px-5 py-5">
+                <div className="border-b border-border px-5 py-5 bg-muted/5">
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div>
                       <div className="flex flex-wrap items-center gap-2">
                         <StatusBadge
                           status={isLeadStatus(selectedLead.status) ? selectedLead.status : "NEW"}
                         />
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-xs font-bold text-muted-foreground">
+                        <Badge variant="outline" className="inline-flex items-center gap-1.5 bg-muted text-muted-foreground border-none font-bold">
                           <CalendarDays className="h-3.5 w-3.5" />
                           {formatDateTime(selectedLead.createdAt)}
-                        </span>
+                        </Badge>
                       </div>
-                      <h2 className="mt-4 text-2xl font-black tracking-tight">
+                      <h2 className="mt-4 text-2xl font-bold tracking-tight text-foreground">
                         {selectedLead.name}
                       </h2>
                       <p className="mt-2 text-sm font-medium text-muted-foreground">
@@ -338,47 +347,47 @@ export default async function AdminMessagesPage({
 
                 <dl className="grid gap-4 border-b border-border px-5 py-5 md:grid-cols-3">
                   <div className="min-w-0">
-                    <dt className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-muted-foreground">
+                    <dt className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground">
                       <Mail className="h-3.5 w-3.5" />
                       E-posta
                     </dt>
                     <dd className="mt-2 truncate text-sm font-bold">
-                      <a href={`mailto:${selectedLead.email}`} className="hover:text-macework">
+                      <a href={`mailto:${selectedLead.email}`} className="text-macework hover:underline">
                         {selectedLead.email}
                       </a>
                     </dd>
                   </div>
                   <div className="min-w-0">
-                    <dt className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-muted-foreground">
+                    <dt className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground">
                       <Building2 className="h-3.5 w-3.5" />
                       Firma
                     </dt>
-                    <dd className="mt-2 truncate text-sm font-bold">
+                    <dd className="mt-2 truncate text-sm font-bold text-foreground">
                       {selectedLead.company ?? "-"}
                     </dd>
                   </div>
                   <div className="min-w-0">
-                    <dt className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-muted-foreground">
+                    <dt className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground">
                       <Tag className="h-3.5 w-3.5" />
                       İlgi
                     </dt>
-                    <dd className="mt-2 truncate text-sm font-bold">
+                    <dd className="mt-2 truncate text-sm font-bold text-foreground">
                       {selectedLead.interest ?? "Genel talep"}
                     </dd>
                   </div>
                 </dl>
 
                 <div className="flex-1 px-5 py-6">
-                  <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground">
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
                     Mesaj içeriği
                   </h3>
-                  <p className="mt-4 whitespace-pre-line text-base leading-8 text-foreground">
+                  <p className="mt-4 whitespace-pre-line text-base leading-8 text-foreground/90">
                     {selectedLead.message}
                   </p>
                 </div>
 
-                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-5 py-4">
-                  <p className="text-xs font-medium text-muted-foreground">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-5 py-4 bg-muted/5">
+                  <p className="text-xs font-semibold text-muted-foreground">
                     Son güncelleme: {formatDateTime(selectedLead.updatedAt)}
                   </p>
                   <AdminActionForm action={deleteLeadAction} successMessage="Mesaj silindi.">
@@ -388,7 +397,10 @@ export default async function AdminMessagesPage({
                       description="Bu mesaj kalıcı olarak silinir ve inbox listesinden kaldırılır."
                       confirmLabel="Sil"
                       pendingChildren="Siliniyor"
-                      className="inline-flex h-10 items-center gap-2 rounded-md border border-red-200 bg-background px-4 text-sm font-black text-red-600 transition-colors hover:bg-red-50"
+                      className={buttonVariants({
+                        variant: "destructive",
+                        className: "gap-2 h-10 px-4 text-sm font-semibold"
+                      })}
                     >
                       <Trash2 className="h-4 w-4" />
                       Sil
@@ -399,7 +411,7 @@ export default async function AdminMessagesPage({
             ) : (
               <div className="flex min-h-[560px] flex-col items-center justify-center px-6 text-center">
                 <Inbox className="h-10 w-10 text-muted-foreground" />
-                <h2 className="mt-4 text-xl font-black">Henüz mesaj yok.</h2>
+                <h2 className="mt-4 text-xl font-bold">Henüz mesaj yok.</h2>
                 <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
                   İletişim formundan gelen talepler burada listelenecek.
                 </p>
@@ -407,7 +419,7 @@ export default async function AdminMessagesPage({
             )}
           </section>
         </div>
-      </div>
+      </Card>
     </>
   );
 }

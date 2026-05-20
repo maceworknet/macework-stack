@@ -11,6 +11,10 @@ import {
 } from "@/lib/admin-listing";
 import { getProjects, resolveMediaUrl } from "@/lib/cms";
 import { richTextToPlainText } from "@/lib/rich-text";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+
 
 const sortOptions = [
   { label: "Yeni - Eski", value: "latest" },
@@ -147,7 +151,9 @@ export default async function AdminProjectsPage({
       <div className="mb-8 flex justify-end">
         <Link
           href="/admin/projects/new"
-          className="inline-flex h-10 items-center gap-2 rounded-md bg-macework px-4 text-sm font-black text-white transition-colors hover:bg-macework-hover"
+          className={buttonVariants({
+            className: "gap-2 bg-macework text-white hover:bg-macework/90 font-bold"
+          })}
         >
           <Plus className="h-4 w-4" />
           Yeni proje ekle
@@ -157,114 +163,131 @@ export default async function AdminProjectsPage({
       {projects.length ? (
         <div className="grid gap-4">
           {projects.map((project: any) => (
-            <article key={project.id} className="rounded-lg border border-border bg-card p-5">
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div className="flex items-start gap-4">
-                  <div className="h-16 w-24 overflow-hidden rounded-lg border border-border bg-muted/40">
-                    <img
-                      src={resolveMediaUrl(project.cover_image?.url)}
-                      alt={project.title}
-                      className="h-full w-full object-cover"
-                    />
+            <Card key={project.id} className="overflow-hidden border-border bg-card shadow-sm transition-all hover:shadow-md">
+              <CardContent className="p-6">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div className="flex items-start gap-4">
+                    <div className="h-16 w-24 flex-shrink-0 overflow-hidden rounded-md border border-border bg-muted/40">
+                      <img
+                        src={resolveMediaUrl(project.cover_image?.url)}
+                        alt={project.title}
+                        className="h-full w-full object-cover transition-transform hover:scale-105 duration-300"
+                      />
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-bold tracking-tight text-foreground">{project.title}</h2>
+                      <p className="text-sm text-muted-foreground">/{project.slug}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h2 className="text-lg font-black">{project.title}</h2>
-                    <p className="text-sm text-muted-foreground">/{project.slug}</p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="outline" className="bg-muted text-muted-foreground hover:bg-muted border-none">
+                      {project.year ?? "Yıl"}
+                    </Badge>
+                    {project.featured ? (
+                      <Badge className="bg-macework text-white hover:bg-macework/90">
+                        Öne çıkan
+                      </Badge>
+                    ) : null}
+                    <Badge
+                      variant={project.published ? "default" : "secondary"}
+                      className={
+                        project.published
+                          ? "bg-emerald-500/10 text-emerald-700 border-emerald-500/20 hover:bg-emerald-500/15"
+                          : "bg-muted text-muted-foreground hover:bg-muted"
+                      }
+                    >
+                      {project.published ? "Yayında" : "Taslak"}
+                    </Badge>
                   </div>
                 </div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded-full bg-muted px-3 py-1 text-xs font-bold">
-                    {project.year ?? "Yıl"}
-                  </span>
-                  {project.featured ? (
-                    <span className="rounded-full bg-macework/10 px-3 py-1 text-xs font-bold text-macework">
-                      Öne çıkan
-                    </span>
-                  ) : null}
-                  <span
-                    className={`rounded-full px-3 py-1 text-xs font-bold ${
-                      project.published
-                        ? "bg-emerald-500/10 text-emerald-700"
-                        : "bg-muted text-muted-foreground"
-                    }`}
-                  >
-                    {project.published ? "Yayında" : "Taslak"}
-                  </span>
-                </div>
-              </div>
-              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                {richTextToPlainText(project.description)}
-              </p>
-              <div className="mt-5 flex flex-wrap items-start gap-3">
-                <details className="min-w-[240px] flex-1 rounded-md border border-border bg-background p-4">
-                  <summary className="cursor-pointer text-sm font-black">
-                    <span className="inline-flex items-center gap-2">
-                      <Eye className="h-4 w-4" />
-                      Hızlı görüntüle
-                    </span>
-                  </summary>
-                  <div className="mt-4 grid gap-3 border-t border-border pt-4 text-sm text-muted-foreground md:grid-cols-3">
-                    <div>
-                      <span className="block text-xs font-black text-foreground">Müşteri</span>
-                      {project.client ?? "Belirtilmedi"}
+                <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                  {richTextToPlainText(project.description)}
+                </p>
+                <div className="mt-5 flex flex-wrap items-stretch gap-3">
+                  <details className="min-w-[240px] flex-1 rounded-md border border-border bg-muted/20 p-4 transition-all duration-200 open:bg-muted/30">
+                    <summary className="cursor-pointer text-sm font-bold text-foreground hover:text-primary transition-colors select-none">
+                      <span className="inline-flex items-center gap-2">
+                        <Eye className="h-4 w-4" />
+                        Hızlı görüntüle
+                      </span>
+                    </summary>
+                    <div className="mt-4 grid gap-3 border-t border-border pt-4 text-sm text-muted-foreground md:grid-cols-3">
+                      <div>
+                        <span className="block text-xs font-semibold text-foreground">Müşteri</span>
+                        {project.client ?? "Belirtilmedi"}
+                      </div>
+                      <div>
+                        <span className="block text-xs font-semibold text-foreground">Kategori</span>
+                        {project.project_category?.name ?? project.category ?? "Genel"}
+                      </div>
+                      <div>
+                        <span className="block text-xs font-semibold text-foreground">Teknoloji</span>
+                        {Array.isArray(project.tags) && project.tags.length
+                          ? project.tags.slice(0, 3).join(", ")
+                          : "Etiket yok"}
+                      </div>
                     </div>
-                    <div>
-                      <span className="block text-xs font-black text-foreground">Kategori</span>
-                      {project.project_category?.name ?? project.category ?? "Genel"}
-                    </div>
-                    <div>
-                      <span className="block text-xs font-black text-foreground">Teknoloji</span>
-                      {Array.isArray(project.tags) && project.tags.length
-                        ? project.tags.slice(0, 3).join(", ")
-                        : "Etiket yok"}
-                    </div>
+                  </details>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <Link
+                      href={`/admin/projects/${encodeURIComponent(String(project.id ?? project.slug))}`}
+                      className={buttonVariants({
+                        variant: "outline",
+                        className: "gap-2 h-full hover:bg-muted text-sm font-semibold"
+                      })}
+                    >
+                      <Pencil className="h-4 w-4" />
+                      Tam düzenle
+                    </Link>
+                    {project.slug ? (
+                      <Link
+                        href={`/admin/preview/projects/${project.slug}`}
+                        target="_blank"
+                        className={buttonVariants({
+                          variant: "outline",
+                          className: "gap-2 h-full hover:bg-muted text-sm font-semibold"
+                        })}
+                      >
+                        <Eye className="h-4 w-4" />
+                        Önizle
+                      </Link>
+                    ) : null}
+                    {project.slug && project.published ? (
+                      <Link
+                        href={`/islerimiz/${project.slug}`}
+                        target="_blank"
+                        className={buttonVariants({
+                          variant: "outline",
+                          className: "gap-2 h-full hover:bg-muted text-sm font-semibold"
+                        })}
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        Canlı sayfa
+                      </Link>
+                    ) : project.slug ? (
+                      <span
+                        title="Taslaklar public sayfada görünmez; önizlemeyi kullanın."
+                        className={buttonVariants({
+                          variant: "outline",
+                          className: "gap-2 h-full cursor-not-allowed opacity-50 text-sm font-semibold"
+                        })}
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        Canlı sayfa
+                      </span>
+                    ) : null}
                   </div>
-                </details>
-                <Link
-                  href={`/admin/projects/${encodeURIComponent(String(project.id ?? project.slug))}`}
-                  className="inline-flex h-10 items-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-black transition-colors hover:bg-muted"
-                >
-                  <Pencil className="h-4 w-4" />
-                  Tam düzenle
-                </Link>
-                {project.slug ? (
-                  <Link
-                    href={`/admin/preview/projects/${project.slug}`}
-                    target="_blank"
-                    className="inline-flex h-10 items-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-black transition-colors hover:bg-muted"
-                  >
-                    <Eye className="h-4 w-4" />
-                    Önizle
-                  </Link>
-                ) : null}
-                {project.slug && project.published ? (
-                  <Link
-                    href={`/islerimiz/${project.slug}`}
-                    target="_blank"
-                    className="inline-flex h-10 items-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-black transition-colors hover:bg-muted"
-                  >
-                    <ExternalLink className="h-4 w-4" />
-                    Canlı sayfa
-                  </Link>
-                ) : project.slug ? (
-                  <span
-                    title="Taslaklar public sayfada görünmez; önizlemeyi kullanın."
-                    className="inline-flex h-10 cursor-not-allowed items-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-black text-muted-foreground opacity-60"
-                  >
-                    <ExternalLink className="h-4 w-4" />
-                    Canlı sayfa
-                  </span>
-                ) : null}
-              </div>
-            </article>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       ) : (
-        <div className="rounded-lg border border-dashed border-border bg-card p-8 text-center">
+        <Card className="border-dashed border-border bg-card p-8 text-center shadow-sm">
           <p className="text-sm font-medium text-muted-foreground">
             Bu filtrelerle eşleşen proje bulunamadı.
           </p>
-        </div>
+        </Card>
       )}
     </>
   );

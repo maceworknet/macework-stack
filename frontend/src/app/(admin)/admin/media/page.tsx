@@ -7,6 +7,10 @@ import { MediaDimensions } from "@/components/admin/media-dimensions";
 import { MediaUploadForm } from "@/components/admin/media-upload-form";
 import { includesSearch, type RawSearchParams } from "@/lib/admin-listing";
 import { getMediaFiles } from "@/lib/cms";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
+
 
 const typeOptions = [
   { label: "Tüm dosyalar", value: "" },
@@ -149,29 +153,35 @@ export default async function AdminMediaPage({
       <MediaUploadForm />
 
       <div className="mt-6 grid gap-4 md:grid-cols-3">
-        <div className="rounded-lg border border-border bg-card p-5">
-          <div className="flex items-center gap-3">
-            <UploadCloud className="h-5 w-5 text-macework" />
-            <span className="text-sm font-bold text-muted-foreground">Toplam dosya</span>
-          </div>
-          <p className="mt-3 text-2xl font-black">{files.length}</p>
-        </div>
-        <div className="rounded-lg border border-border bg-card p-5">
-          <div className="flex items-center gap-3">
-            <ImageIcon className="h-5 w-5 text-macework" />
-            <span className="text-sm font-bold text-muted-foreground">Görsel / diğer</span>
-          </div>
-          <p className="mt-3 text-2xl font-black">
-            {imageCount} / {otherCount}
-          </p>
-        </div>
-        <div className="rounded-lg border border-border bg-card p-5">
-          <div className="flex items-center gap-3">
-            <HardDrive className="h-5 w-5 text-macework" />
-            <span className="text-sm font-bold text-muted-foreground">Toplam boyut</span>
-          </div>
-          <p className="mt-3 text-2xl font-black">{formatBytes(totalSize)}</p>
-        </div>
+        <Card className="border-border bg-card shadow-sm">
+          <CardContent className="p-5">
+            <div className="flex items-center gap-3">
+              <UploadCloud className="h-5 w-5 text-macework" />
+              <span className="text-sm font-bold text-muted-foreground">Toplam dosya</span>
+            </div>
+            <p className="mt-3 text-2xl font-black text-foreground">{files.length}</p>
+          </CardContent>
+        </Card>
+        <Card className="border-border bg-card shadow-sm">
+          <CardContent className="p-5">
+            <div className="flex items-center gap-3">
+              <ImageIcon className="h-5 w-5 text-macework" />
+              <span className="text-sm font-bold text-muted-foreground">Görsel / diğer</span>
+            </div>
+            <p className="mt-3 text-2xl font-black text-foreground">
+              {imageCount} / {otherCount}
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="border-border bg-card shadow-sm">
+          <CardContent className="p-5">
+            <div className="flex items-center gap-3">
+              <HardDrive className="h-5 w-5 text-macework" />
+              <span className="text-sm font-bold text-muted-foreground">Toplam boyut</span>
+            </div>
+            <p className="mt-3 text-2xl font-black text-foreground">{formatBytes(totalSize)}</p>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="mt-6">
@@ -190,16 +200,16 @@ export default async function AdminMediaPage({
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {visibleFiles.map((file: any) => (
-          <article
+          <Card
             key={file.id}
-            className="overflow-hidden rounded-lg border border-border bg-card transition-colors hover:border-macework/50"
+            className="overflow-hidden border-border bg-card shadow-sm transition-all hover:shadow-md hover:border-macework/50"
           >
-            <div className="aspect-[4/3] bg-muted/30">
+            <div className="aspect-[4/3] bg-muted/30 relative group overflow-hidden">
               {isImage(file) ? (
                 <img
                   src={file.url}
                   alt={file.originalName}
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover transition-transform hover:scale-105 duration-300"
                 />
               ) : (
                 <div className="flex h-full flex-col items-center justify-center gap-2 text-sm font-bold text-muted-foreground">
@@ -208,19 +218,19 @@ export default async function AdminMediaPage({
                 </div>
               )}
             </div>
-            <div className="space-y-4 p-4">
+            <CardContent className="p-4 space-y-4">
               <div>
                 <div className="flex items-center justify-between gap-2">
-                  <p className="min-w-0 truncate font-bold">{file.originalName}</p>
-                  <span className="shrink-0 rounded-full bg-muted px-2.5 py-1 text-[11px] font-bold text-muted-foreground">
+                  <p className="min-w-0 truncate font-bold text-foreground">{file.originalName}</p>
+                  <Badge variant="outline" className="shrink-0 bg-muted text-muted-foreground border-none font-bold">
                     {fileTypeLabel(file)}
-                  </span>
+                  </Badge>
                 </div>
                 <a
                   href={file.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-2 block truncate text-xs font-medium text-macework"
+                  className="mt-2 block truncate text-xs font-semibold text-macework hover:underline"
                 >
                   {file.url}
                 </a>
@@ -228,21 +238,21 @@ export default async function AdminMediaPage({
 
               <dl className="grid grid-cols-2 gap-3 text-xs">
                 <div>
-                  <dt className="font-black text-foreground">Boyut</dt>
+                  <dt className="font-bold text-foreground">Boyut</dt>
                   <dd className="mt-1 text-muted-foreground">{formatBytes(file.size)}</dd>
                 </div>
                 <div>
-                  <dt className="font-black text-foreground">Mime type</dt>
+                  <dt className="font-bold text-foreground">Mime type</dt>
                   <dd className="mt-1 truncate text-muted-foreground">{file.mimeType}</dd>
                 </div>
                 <div>
-                  <dt className="font-black text-foreground">Ölçü</dt>
+                  <dt className="font-bold text-foreground">Ölçü</dt>
                   <dd className="mt-1 text-muted-foreground">
                     {isImage(file) ? <MediaDimensions src={file.url} /> : "Uygun değil"}
                   </dd>
                 </div>
                 <div>
-                  <dt className="font-black text-foreground">Yükleme</dt>
+                  <dt className="font-bold text-foreground">Yükleme</dt>
                   <dd className="mt-1 text-muted-foreground">{formatDate(file.createdAt)}</dd>
                 </div>
               </dl>
@@ -255,20 +265,23 @@ export default async function AdminMediaPage({
                   description="Dosya kaydı ve local uploads dosyası silinir. Bu işlem geri alınamaz."
                   confirmLabel="Sil"
                   pendingChildren="Siliniyor"
-                  className="h-9 rounded-md border border-red-200 px-3 text-xs font-black text-red-600 transition-colors hover:bg-red-50"
+                  className={buttonVariants({
+                    variant: "destructive",
+                    className: "w-full text-xs font-semibold h-9"
+                  })}
                 >
                   Sil
                 </ConfirmSubmitButton>
               </AdminActionForm>
-            </div>
-          </article>
+            </CardContent>
+          </Card>
         ))}
         {visibleFiles.length === 0 ? (
-          <div className="col-span-full rounded-lg border border-dashed border-border bg-card p-8 text-center">
+          <Card className="col-span-full border-dashed border-border bg-card p-8 text-center shadow-sm">
             <p className="text-sm font-medium text-muted-foreground">
               Bu filtrelerle eşleşen medya bulunamadı.
             </p>
-          </div>
+          </Card>
         ) : null}
       </div>
     </>
